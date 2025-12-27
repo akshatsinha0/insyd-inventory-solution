@@ -5,10 +5,10 @@
  */
 export default function Sidebar({ activeTab, setActiveTab }) {
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'inventory', label: 'Inventory', icon: '📦' },
-    { id: 'transactions', label: 'Transactions', icon: '📋' },
-    { id: 'scanner', label: 'Scanner', icon: '📱' },
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'inventory', label: 'Inventory' },
+    { id: 'transactions', label: 'Transactions' },
+    { id: 'scanner', label: 'Scanner' },
   ]
 
   return (
@@ -29,7 +29,6 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 : 'text-gray-600'
             }`}
           >
-            <span>{tab.icon}</span>
             {tab.label}
           </button>
         ))}

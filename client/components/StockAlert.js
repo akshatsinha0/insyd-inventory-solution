@@ -30,7 +30,7 @@ export default function StockAlert({ inventory }) {
       {lowStock.length > 0 && (
         <div className="bg-yellow-50 border border-yellow-200 p-3 mb-2">
           <p className="text-sm font-medium text-yellow-800">
-            ⚠️ {lowStock.length} item(s) below reorder level
+            Low Stock Alert: {lowStock.length} item(s) below reorder level
           </p>
           <p className="text-xs text-yellow-600 mt-1">
             {lowStock.slice(0, 3).map(i => i.sku?.sku_code).join(', ')}
@@ -42,7 +42,7 @@ export default function StockAlert({ inventory }) {
       {deadStock.length > 0 && (
         <div className="bg-red-50 border border-red-200 p-3">
           <p className="text-sm font-medium text-red-800">
-            🚨 {deadStock.length} item(s) flagged as dead stock
+            Dead Stock Alert: {deadStock.length} item(s) flagged as dead stock
           </p>
           <p className="text-xs text-red-600 mt-1">
             No movement in 90+ days. Consider liquidation.

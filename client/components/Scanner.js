@@ -105,7 +105,7 @@ export default function Scanner({ onScan }) {
             <button
               onClick={handleScan}
               disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white text-sm"
+              className="px-4 py-2 bg-gray-700 text-white text-sm"
             >
               Scan
             </button>
