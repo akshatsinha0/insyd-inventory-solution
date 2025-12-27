@@ -184,7 +184,7 @@ export default function InventoryList({ inventory, onRefresh }) {
               </button>
               <button
                 onClick={handleAllocate}
-                className="flex-1 px-4 py-2 text-sm bg-blue-600 text-white"
+                className="flex-1 px-4 py-2 text-sm bg-gray-700 text-white"
               >
                 Allocate
               </button>
