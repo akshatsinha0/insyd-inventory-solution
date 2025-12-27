@@ -1,10 +1,23 @@
 -- Insyd Inventory Solution Database Schema
 -- Supabase PostgreSQL
+-- Safe to run multiple times - includes all DROP statements
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Drop existing tables if they exist (in correct order to handle dependencies)
+-- Drop existing triggers first (prevents "trigger already exists" errors)
+DROP TRIGGER IF EXISTS update_warehouses_updated_at ON warehouses CASCADE;
+DROP TRIGGER IF EXISTS update_skus_updated_at ON skus CASCADE;
+DROP TRIGGER IF EXISTS update_inventory_updated_at ON inventory CASCADE;
+DROP TRIGGER IF EXISTS update_allocations_updated_at ON allocations CASCADE;
+DROP TRIGGER IF EXISTS update_purchase_orders_updated_at ON purchase_orders CASCADE;
+DROP TRIGGER IF EXISTS update_invoices_updated_at ON invoices CASCADE;
+DROP TRIGGER IF EXISTS update_three_way_matches_updated_at ON three_way_matches CASCADE;
+
+-- Drop existing function (prevents "function already exists" errors)
+DROP FUNCTION IF EXISTS update_updated_at() CASCADE;
+
+-- Drop existing tables (in correct order to handle foreign key dependencies)
 DROP TABLE IF EXISTS three_way_matches CASCADE;
 DROP TABLE IF EXISTS invoice_line_items CASCADE;
 DROP TABLE IF EXISTS invoices CASCADE;

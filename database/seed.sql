@@ -1,27 +1,66 @@
 -- Seed data for Insyd Inventory Solution
+-- Safe to run multiple times
 
 -- Clean up existing data (for re-running seed)
-TRUNCATE TABLE three_way_matches CASCADE;
-TRUNCATE TABLE invoice_line_items CASCADE;
-TRUNCATE TABLE invoices CASCADE;
-TRUNCATE TABLE grn_line_items CASCADE;
-TRUNCATE TABLE grns CASCADE;
-TRUNCATE TABLE po_line_items CASCADE;
-TRUNCATE TABLE purchase_orders CASCADE;
-TRUNCATE TABLE shipments CASCADE;
-TRUNCATE TABLE allocations CASCADE;
-TRUNCATE TABLE transactions CASCADE;
-TRUNCATE TABLE inventory CASCADE;
-TRUNCATE TABLE bin_locations CASCADE;
-TRUNCATE TABLE skus CASCADE;
-TRUNCATE TABLE warehouses CASCADE;
+-- Using DO block to handle tables that might not exist yet
+DO $$ 
+BEGIN
+    -- Truncate tables if they exist
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'three_way_matches') THEN
+        TRUNCATE TABLE three_way_matches CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'invoice_line_items') THEN
+        TRUNCATE TABLE invoice_line_items CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'invoices') THEN
+        TRUNCATE TABLE invoices CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'grn_line_items') THEN
+        TRUNCATE TABLE grn_line_items CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'grns') THEN
+        TRUNCATE TABLE grns CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'po_line_items') THEN
+        TRUNCATE TABLE po_line_items CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'purchase_orders') THEN
+        TRUNCATE TABLE purchase_orders CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'shipments') THEN
+        TRUNCATE TABLE shipments CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'allocations') THEN
+        TRUNCATE TABLE allocations CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'transactions') THEN
+        TRUNCATE TABLE transactions CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'inventory') THEN
+        TRUNCATE TABLE inventory CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'bin_locations') THEN
+        TRUNCATE TABLE bin_locations CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'skus') THEN
+        TRUNCATE TABLE skus CASCADE;
+    END IF;
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'warehouses') THEN
+        TRUNCATE TABLE warehouses CASCADE;
+    END IF;
+END $$;
 
 -- Reset categories to default
-DELETE FROM categories;
+DELETE FROM categories WHERE code IN ('A', 'B', 'C');
 INSERT INTO categories (code, name, description, audit_frequency, value_percentage) VALUES
 ('A', 'High Value', 'Premium materials requiring daily/weekly audits', 'Daily/Weekly', '70-80%'),
 ('B', 'Medium Value', 'Standard materials requiring monthly audits', 'Monthly', '15-25%'),
-('C', 'Low Value', 'Consumables managed via visual control', 'Quarterly', '5-10%');
+('C', 'Low Value', 'Consumables managed via visual control', 'Quarterly', '5-10%')
+ON CONFLICT (code) DO UPDATE SET
+    name = EXCLUDED.name,
+    description = EXCLUDED.description,
+    audit_frequency = EXCLUDED.audit_frequency,
+    value_percentage = EXCLUDED.value_percentage;
 
 -- Insert sample warehouses
 INSERT INTO warehouses (code, name, address, city) VALUES
