@@ -39,6 +39,11 @@ Indian AEC material businesses face critical challenges:
 - [x] 3PL shipment tracking with ASN
 - [x] Webhook integration for logistics providers
 - [x] In-transit inventory visibility
+- [x] Purchase Order management
+- [x] Goods Received Note (GRN) processing
+- [x] Supplier invoice entry
+- [x] Automated 3-way matching (PO vs GRN vs Invoice)
+- [x] Variance detection and approval workflows
 
 ## Project Structure
 
@@ -119,6 +124,21 @@ NODE_ENV=development
 | POST | `/api/shipments/webhook` | Webhook for 3PL status updates |
 | PUT | `/api/shipments/:id/status` | Manual status update |
 | GET | `/api/shipments/in-transit` | Get in-transit summary |
+
+### Procurement Endpoints (3-Way Matching)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/purchase-orders` | List all purchase orders |
+| POST | `/api/purchase-orders` | Create new PO |
+| POST | `/api/purchase-orders/:id/approve` | Approve PO |
+| GET | `/api/grns` | List all GRNs |
+| POST | `/api/grns` | Create GRN from PO |
+| POST | `/api/grns/:id/approve` | Approve GRN and update inventory |
+| GET | `/api/invoices` | List all invoices |
+| POST | `/api/invoices` | Enter invoice and trigger 3-way match |
+| POST | `/api/invoices/:id/approve` | Approve matched invoice for payment |
+| GET | `/api/invoices/matches` | Get 3-way match results |
 
 ## License
 

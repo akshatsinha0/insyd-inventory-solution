@@ -7,6 +7,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'inventory', label: 'Inventory' },
+    { id: 'procurement', label: 'Procurement' },
     { id: 'shipments', label: 'Shipments' },
     { id: 'transactions', label: 'Transactions' },
     { id: 'scanner', label: 'Scanner' },

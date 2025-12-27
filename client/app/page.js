@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react'
 import Sidebar from '../components/Sidebar'
 import Dashboard from '../components/Dashboard'
 import InventoryList from '../components/InventoryList'
+import Procurement from '../components/Procurement'
 import Transactions from '../components/Transactions'
 import Scanner from '../components/Scanner'
 import Shipments from '../components/Shipments'
@@ -54,6 +55,8 @@ export default function Home() {
         return <Dashboard inventory={inventory} transactions={transactions} warehouses={warehouses} />
       case 'inventory':
         return <InventoryList inventory={inventory} onRefresh={fetchData} />
+      case 'procurement':
+        return <Procurement />
       case 'shipments':
         return <Shipments />
       case 'transactions':

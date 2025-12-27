@@ -261,3 +261,50 @@ AND s.sku_code IN (
     'CRF-SET-001', 'CRF-HAM-002', 'BST-NAL-003',
     'STN-TPM-001', 'STN-SCR-002', 'BLK-BIT-003'
 );
+
+-- Insert sample Purchase Orders
+INSERT INTO purchase_orders (po_number, vendor_name, warehouse_id, status, total_amount, expected_delivery, created_by)
+SELECT 
+    'PO-2025-001',
+    'JSW Steel Ltd',
+    w.id,
+    'APPROVED',
+    650000.00,
+    CURRENT_DATE + INTERVAL '7 days',
+    'procurement@insyd.ai'
+FROM warehouses w WHERE w.code = 'WH01';
+
+INSERT INTO purchase_orders (po_number, vendor_name, warehouse_id, status, total_amount, expected_delivery, created_by)
+SELECT 
+    'PO-2025-002',
+    'Somany Ceramics',
+    w.id,
+    'SENT',
+    425000.00,
+    CURRENT_DATE + INTERVAL '10 days',
+    'procurement@insyd.ai'
+FROM warehouses w WHERE w.code = 'WH01';
+
+-- Insert PO Line Items for PO-2025-001
+INSERT INTO po_line_items (po_id, sku_id, quantity_ordered, unit_price)
+SELECT 
+    po.id,
+    s.id,
+    10,
+    65000.00
+FROM purchase_orders po
+CROSS JOIN skus s
+WHERE po.po_number = 'PO-2025-001'
+AND s.sku_code = 'STL-JSW-002';
+
+-- Insert PO Line Items for PO-2025-002
+INSERT INTO po_line_items (po_id, sku_id, quantity_ordered, unit_price)
+SELECT 
+    po.id,
+    s.id,
+    500,
+    850.00
+FROM purchase_orders po
+CROSS JOIN skus s
+WHERE po.po_number = 'PO-2025-002'
+AND s.sku_code = 'TIL-SOM-003';
