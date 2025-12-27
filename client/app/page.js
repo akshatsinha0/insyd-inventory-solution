@@ -6,6 +6,7 @@ import Dashboard from '../components/Dashboard'
 import InventoryList from '../components/InventoryList'
 import Transactions from '../components/Transactions'
 import Scanner from '../components/Scanner'
+import StockAlert from '../components/StockAlert'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -62,7 +63,10 @@ export default function Home() {
             <p className="text-gray-500">Loading...</p>
           </div>
         ) : (
-          renderContent()
+          <>
+            <StockAlert inventory={inventory} />
+            {renderContent()}
+          </>
         )}
       </main>
     </div>
