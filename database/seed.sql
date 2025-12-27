@@ -1,5 +1,20 @@
 -- Seed data for Insyd Inventory Solution
 
+-- Clean up existing data (for re-running seed)
+TRUNCATE TABLE allocations CASCADE;
+TRUNCATE TABLE transactions CASCADE;
+TRUNCATE TABLE inventory CASCADE;
+TRUNCATE TABLE bin_locations CASCADE;
+TRUNCATE TABLE skus CASCADE;
+TRUNCATE TABLE warehouses CASCADE;
+
+-- Reset categories to default
+DELETE FROM categories;
+INSERT INTO categories (code, name, description, audit_frequency, value_percentage) VALUES
+('A', 'High Value', 'Premium materials requiring daily/weekly audits', 'Daily/Weekly', '70-80%'),
+('B', 'Medium Value', 'Standard materials requiring monthly audits', 'Monthly', '15-25%'),
+('C', 'Low Value', 'Consumables managed via visual control', 'Quarterly', '5-10%');
+
 -- Insert sample warehouses
 INSERT INTO warehouses (code, name, address, city) VALUES
 ('WH01', 'Delhi Central Warehouse', '123 Industrial Area, Okhla', 'Delhi'),
