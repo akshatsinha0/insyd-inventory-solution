@@ -1,0 +1,49 @@
+### Health Check
+GET http://localhost:3001/api/health
+
+### Get All Inventory
+GET http://localhost:3001/api/inventory
+
+### Get Inventory by Category A
+GET http://localhost:3001/api/inventory?category=A
+
+### Get All SKUs
+GET http://localhost:3001/api/skus
+
+### Search SKUs
+GET http://localhost:3001/api/skus?search=marble
+
+### Get All Warehouses
+GET http://localhost:3001/api/warehouses
+
+### Get Transactions
+GET http://localhost:3001/api/transactions?limit=10
+
+### Get Analytics Summary
+GET http://localhost:3001/api/analytics/summary
+
+### Get Low Stock Items
+GET http://localhost:3001/api/analytics/low-stock
+
+### Get Inventory Turnover (30 days)
+GET http://localhost:3001/api/analytics/turnover?days=30
+
+### Soft Allocate Stock
+POST http://localhost:3001/api/inventory/{{inventory_id}}/allocate
+Content-Type: application/json
+
+{
+  "quantity": 10,
+  "reference_number": "SO-2025-001",
+  "expires_in_hours": 24
+}
+
+### Receive Goods
+POST http://localhost:3001/api/inventory/{{inventory_id}}/receive
+Content-Type: application/json
+
+{
+  "quantity": 50,
+  "reference_number": "GRN-2025-001",
+  "notes": "Received from JSW Steel"
+}
