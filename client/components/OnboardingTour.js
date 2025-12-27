@@ -117,33 +117,113 @@ const tourSteps = [
 const CurvyArrow = ({ type, style }) => {
   const arrows = {
     'left': (
-      <svg width="50" height="30" viewBox="0 0 50 30" style={style} className="absolute animate-pulse-arrow">
-        <path d="M45 15 Q25 5, 8 15" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
-        <polygon points="2,12 10,15 6,22" fill="#374151" />
+      <svg width="60" height="40" viewBox="0 0 60 40" style={style} className="absolute animate-pulse-arrow">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.3"/>
+          </filter>
+        </defs>
+        <path 
+          d="M55 20 Q35 8, 15 20 Q10 22, 8 24" 
+          fill="none" 
+          stroke="#1f2937" 
+          strokeWidth="2.5" 
+          strokeLinecap="round"
+          filter="url(#shadow)"
+        />
+        <path 
+          d="M8 24 L2 20 L8 16 Z" 
+          fill="#1f2937"
+          filter="url(#shadow)"
+        />
       </svg>
     ),
     'right': (
-      <svg width="50" height="30" viewBox="0 0 50 30" style={style} className="absolute animate-pulse-arrow">
-        <path d="M5 15 Q25 5, 42 15" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
-        <polygon points="48,12 40,15 44,22" fill="#374151" />
+      <svg width="60" height="40" viewBox="0 0 60 40" style={style} className="absolute animate-pulse-arrow">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.3"/>
+          </filter>
+        </defs>
+        <path 
+          d="M5 20 Q25 8, 45 20 Q50 22, 52 24" 
+          fill="none" 
+          stroke="#1f2937" 
+          strokeWidth="2.5" 
+          strokeLinecap="round"
+          filter="url(#shadow)"
+        />
+        <path 
+          d="M52 24 L58 20 L52 16 Z" 
+          fill="#1f2937"
+          filter="url(#shadow)"
+        />
       </svg>
     ),
     'up': (
-      <svg width="30" height="50" viewBox="0 0 30 50" style={style} className="absolute animate-bounce-arrow">
-        <path d="M15 45 Q5 25, 15 8" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
-        <polygon points="12,2 15,10 18,2" fill="#374151" />
+      <svg width="40" height="60" viewBox="0 0 40 60" style={style} className="absolute animate-bounce-arrow">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.3"/>
+          </filter>
+        </defs>
+        <path 
+          d="M20 55 Q8 35, 20 15 Q22 10, 24 8" 
+          fill="none" 
+          stroke="#1f2937" 
+          strokeWidth="2.5" 
+          strokeLinecap="round"
+          filter="url(#shadow)"
+        />
+        <path 
+          d="M24 8 L20 2 L16 8 Z" 
+          fill="#1f2937"
+          filter="url(#shadow)"
+        />
       </svg>
     ),
     'up-right': (
-      <svg width="60" height="50" viewBox="0 0 60 50" style={style} className="absolute animate-bounce-arrow">
-        <path d="M10 45 Q15 20, 50 10" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
-        <polygon points="55,5 48,12 55,15" fill="#374151" />
+      <svg width="80" height="60" viewBox="0 0 80 60" style={style} className="absolute animate-bounce-arrow">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.3"/>
+          </filter>
+        </defs>
+        <path 
+          d="M10 55 Q20 35, 40 20 Q55 10, 68 8" 
+          fill="none" 
+          stroke="#1f2937" 
+          strokeWidth="2.5" 
+          strokeLinecap="round"
+          filter="url(#shadow)"
+        />
+        <path 
+          d="M68 8 L75 5 L72 12 Z" 
+          fill="#1f2937"
+          filter="url(#shadow)"
+        />
       </svg>
     ),
     'up-left': (
-      <svg width="60" height="50" viewBox="0 0 60 50" style={style} className="absolute animate-bounce-arrow">
-        <path d="M50 45 Q45 20, 10 10" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" />
-        <polygon points="5,5 12,12 5,15" fill="#374151" />
+      <svg width="80" height="60" viewBox="0 0 80 60" style={style} className="absolute animate-bounce-arrow">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.3"/>
+          </filter>
+        </defs>
+        <path 
+          d="M70 55 Q60 35, 40 20 Q25 10, 12 8" 
+          fill="none" 
+          stroke="#1f2937" 
+          strokeWidth="2.5" 
+          strokeLinecap="round"
+          filter="url(#shadow)"
+        />
+        <path 
+          d="M12 8 L5 5 L8 12 Z" 
+          fill="#1f2937"
+          filter="url(#shadow)"
+        />
       </svg>
     )
   }
