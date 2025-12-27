@@ -1,3 +1,9 @@
+/*
+ * 1.) Main Application Page.
+ * 2.) Managed global state for inventory and transactions.
+ * 3.) Rendered tab-based navigation between views.
+ * 4.) Integrated stock alert notifications.
+ */
 'use client'
 
 import { useState, useEffect } from 'react'

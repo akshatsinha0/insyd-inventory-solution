@@ -1,3 +1,7 @@
+/*
+ * 1.) Warehouse Selector Component.
+ * 2.) Provided dropdown for warehouse filtering.
+ */
 'use client'
 
 export default function WarehouseSelector({ warehouses, selected, onSelect }) {

@@ -1,3 +1,9 @@
+/*
+ * 1.) Analytics Routes.
+ * 2.) Calculated inventory summary by ABC category.
+ * 3.) Identified low stock items below reorder level.
+ * 4.) Computed inventory turnover ratio metrics.
+ */
 const express = require('express');
 const router = express.Router();
 const supabase = require('../lib/supabase');

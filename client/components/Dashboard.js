@@ -1,3 +1,8 @@
+/*
+ * 1.) Dashboard Component.
+ * 2.) Displayed KPI metrics and category breakdown.
+ * 3.) Showed low stock alerts and recent transactions.
+ */
 export default function Dashboard({ inventory, transactions, warehouses }) {
   // Calculate metrics
   const totalItems = inventory.length

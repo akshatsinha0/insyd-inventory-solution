@@ -1,3 +1,9 @@
+/*
+ * 1.) Inventory List Component.
+ * 2.) Rendered filterable inventory table.
+ * 3.) Implemented soft allocation modal.
+ * 4.) Displayed bin location codes.
+ */
 'use client'
 
 import { useState } from 'react'

@@ -1,3 +1,9 @@
+/*
+ * 1.) Express Server Entry Point.
+ * 2.) Configured CORS and JSON middleware.
+ * 3.) Registered all API route handlers.
+ * 4.) Added health check endpoint.
+ */
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();

@@ -1,3 +1,8 @@
+/*
+ * 1.) Warehouse Routes.
+ * 2.) Managed warehouse and bin location data.
+ * 3.) Supported zone-based filtering for fast-pick areas.
+ */
 const express = require('express');
 const router = express.Router();
 const supabase = require('../lib/supabase');

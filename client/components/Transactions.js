@@ -1,3 +1,8 @@
+/*
+ * 1.) Transactions Component.
+ * 2.) Displayed audit log with type filtering.
+ * 3.) Showed transaction details and timestamps.
+ */
 'use client'
 
 import { useState } from 'react'

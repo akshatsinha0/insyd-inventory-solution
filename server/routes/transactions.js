@@ -1,3 +1,8 @@
+/*
+ * 1.) Transaction Log Routes.
+ * 2.) Provided audit trail for all inventory movements.
+ * 3.) Supported filtering by type, SKU, and warehouse.
+ */
 const express = require('express');
 const router = express.Router();
 const supabase = require('../lib/supabase');

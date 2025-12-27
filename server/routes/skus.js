@@ -1,3 +1,8 @@
+/*
+ * 1.) SKU Master Routes.
+ * 2.) Handles CRUD operations for Stock Keeping Units.
+ * 3.) Supports ABC category filtering and search.
+ */
 const express = require('express');
 const router = express.Router();
 const supabase = require('../lib/supabase');

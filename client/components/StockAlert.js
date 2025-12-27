@@ -1,3 +1,8 @@
+/*
+ * 1.) Stock Alert Component.
+ * 2.) Detected items below reorder level.
+ * 3.) Flagged dead stock with no movement in 90+ days.
+ */
 'use client'
 
 export default function StockAlert({ inventory }) {

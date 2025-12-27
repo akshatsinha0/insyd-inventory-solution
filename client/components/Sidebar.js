@@ -1,3 +1,8 @@
+/*
+ * 1.) Sidebar Navigation Component.
+ * 2.) Rendered tab buttons for main views.
+ * 3.) Highlighted active tab state.
+ */
 export default function Sidebar({ activeTab, setActiveTab }) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },

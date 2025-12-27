@@ -1,3 +1,9 @@
+/*
+ * 1.) Inventory Routes.
+ * 2.) Implemented CRUD operations for inventory items.
+ * 3.) Added soft allocation with atomic transaction support.
+ * 4.) Included goods receiving (GRN) functionality.
+ */
 const express = require('express');
 const router = express.Router();
 const supabase = require('../lib/supabase');

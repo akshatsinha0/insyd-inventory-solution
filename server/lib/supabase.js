@@ -1,3 +1,8 @@
+/*
+ * 1.) Supabase Client Configuration.
+ * 2.) Initialized connection using service role key.
+ * 3.) Enabled server-side database operations.
+ */
 const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = process.env.SUPABASE_URL;

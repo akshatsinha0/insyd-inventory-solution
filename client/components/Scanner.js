@@ -1,3 +1,8 @@
+/*
+ * 1.) Scanner Component.
+ * 2.) Simulated QR/barcode scanning via SKU input.
+ * 3.) Supported goods receiving and allocation actions.
+ */
 'use client'
 
 import { useState } from 'react'
