@@ -1,5 +1,20 @@
 -- Add Procurement Tables for 3-Way Matching
 -- Run this in Supabase SQL Editor if you already have existing data
+-- Safe to run multiple times
+
+-- Drop existing triggers first
+DROP TRIGGER IF EXISTS update_purchase_orders_updated_at ON purchase_orders CASCADE;
+DROP TRIGGER IF EXISTS update_invoices_updated_at ON invoices CASCADE;
+DROP TRIGGER IF EXISTS update_three_way_matches_updated_at ON three_way_matches CASCADE;
+
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS three_way_matches CASCADE;
+DROP TABLE IF EXISTS invoice_line_items CASCADE;
+DROP TABLE IF EXISTS invoices CASCADE;
+DROP TABLE IF EXISTS grn_line_items CASCADE;
+DROP TABLE IF EXISTS grns CASCADE;
+DROP TABLE IF EXISTS po_line_items CASCADE;
+DROP TABLE IF EXISTS purchase_orders CASCADE;
 
 -- Purchase Orders table
 CREATE TABLE IF NOT EXISTS purchase_orders (
@@ -111,15 +126,20 @@ CREATE INDEX IF NOT EXISTS idx_grn_po ON grns(po_id);
 CREATE INDEX IF NOT EXISTS idx_invoice_po ON invoices(po_id);
 CREATE INDEX IF NOT EXISTS idx_invoice_status ON invoices(status);
 
--- Add triggers
-CREATE TRIGGER update_purchase_orders_updated_at
-    BEFORE UPDATE ON purchase_orders
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+-- Add triggers (only if function exists)
+DO $$ 
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'update_updated_at') THEN
+        CREATE TRIGGER update_purchase_orders_updated_at
+            BEFORE UPDATE ON purchase_orders
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER update_invoices_updated_at
-    BEFORE UPDATE ON invoices
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+        CREATE TRIGGER update_invoices_updated_at
+            BEFORE UPDATE ON invoices
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER update_three_way_matches_updated_at
-    BEFORE UPDATE ON three_way_matches
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+        CREATE TRIGGER update_three_way_matches_updated_at
+            BEFORE UPDATE ON three_way_matches
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+    END IF;
+END $$;
