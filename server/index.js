@@ -6,6 +6,7 @@ const inventoryRoutes = require('./routes/inventory');
 const transactionRoutes = require('./routes/transactions');
 const warehouseRoutes = require('./routes/warehouses');
 const skuRoutes = require('./routes/skus');
+const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,6 +20,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/warehouses', warehouseRoutes);
 app.use('/api/skus', skuRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
