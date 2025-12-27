@@ -4,6 +4,26 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Drop existing tables if they exist (in correct order to handle dependencies)
+DROP TABLE IF EXISTS three_way_matches CASCADE;
+DROP TABLE IF EXISTS invoice_line_items CASCADE;
+DROP TABLE IF EXISTS invoices CASCADE;
+DROP TABLE IF EXISTS grn_line_items CASCADE;
+DROP TABLE IF EXISTS grns CASCADE;
+DROP TABLE IF EXISTS po_line_items CASCADE;
+DROP TABLE IF EXISTS purchase_orders CASCADE;
+DROP TABLE IF EXISTS shipments CASCADE;
+DROP TABLE IF EXISTS allocations CASCADE;
+DROP TABLE IF EXISTS transactions CASCADE;
+DROP TABLE IF EXISTS inventory CASCADE;
+DROP TABLE IF EXISTS bin_locations CASCADE;
+DROP TABLE IF EXISTS skus CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS warehouses CASCADE;
+
+-- Drop enum type if exists
+DROP TYPE IF EXISTS transaction_type CASCADE;
+
 -- Warehouses table
 CREATE TABLE warehouses (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

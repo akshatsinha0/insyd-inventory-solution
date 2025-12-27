@@ -1,6 +1,14 @@
 -- Seed data for Insyd Inventory Solution
 
 -- Clean up existing data (for re-running seed)
+TRUNCATE TABLE three_way_matches CASCADE;
+TRUNCATE TABLE invoice_line_items CASCADE;
+TRUNCATE TABLE invoices CASCADE;
+TRUNCATE TABLE grn_line_items CASCADE;
+TRUNCATE TABLE grns CASCADE;
+TRUNCATE TABLE po_line_items CASCADE;
+TRUNCATE TABLE purchase_orders CASCADE;
+TRUNCATE TABLE shipments CASCADE;
 TRUNCATE TABLE allocations CASCADE;
 TRUNCATE TABLE transactions CASCADE;
 TRUNCATE TABLE inventory CASCADE;

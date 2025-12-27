@@ -129,7 +129,7 @@ export default function InventoryList({ inventory, onRefresh }) {
                 <td className="px-4 py-3">
                   <button
                     onClick={() => setSelectedItem(item)}
-                    className="text-xs text-blue-600 bg-amber-50 px-3 py-1 border border-amber-200"
+                    className="text-xs text-green-700 bg-green-100 px-3 py-1 border border-green-200"
                   >
                     Allocate
                   </button>
