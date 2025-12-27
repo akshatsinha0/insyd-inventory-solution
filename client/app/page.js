@@ -77,7 +77,12 @@ export default function Home() {
           </>
         )}
       </main>
-      {showTour && <OnboardingTour onComplete={() => setShowTour(false)} />}
+      {showTour && (
+        <OnboardingTour 
+          onComplete={() => setShowTour(false)} 
+          setActiveTab={setActiveTab}
+        />
+      )}
     </div>
   )
 }
