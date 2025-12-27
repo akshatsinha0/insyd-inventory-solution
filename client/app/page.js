@@ -13,6 +13,7 @@ import InventoryList from '../components/InventoryList'
 import Transactions from '../components/Transactions'
 import Scanner from '../components/Scanner'
 import StockAlert from '../components/StockAlert'
+import OnboardingTour from '../components/OnboardingTour'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -20,6 +21,7 @@ export default function Home() {
   const [transactions, setTransactions] = useState([])
   const [warehouses, setWarehouses] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showTour, setShowTour] = useState(true)
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
@@ -75,6 +77,7 @@ export default function Home() {
           </>
         )}
       </main>
+      {showTour && <OnboardingTour onComplete={() => setShowTour(false)} />}
     </div>
   )
 }
