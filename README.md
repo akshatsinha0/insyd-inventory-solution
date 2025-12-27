@@ -36,6 +36,9 @@ Indian AEC material businesses face critical challenges:
 - [x] Transaction audit logging
 - [x] Dead stock alerts
 - [x] Multi-warehouse support
+- [x] 3PL shipment tracking with ASN
+- [x] Webhook integration for logistics providers
+- [x] In-transit inventory visibility
 
 ## Project Structure
 
@@ -106,6 +109,16 @@ NODE_ENV=development
 |--------|----------|-------------|
 | GET | `/api/transactions` | Get transaction log |
 | POST | `/api/transactions` | Log new transaction |
+
+### Shipment Endpoints (3PL Integration)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/shipments` | List all shipments |
+| POST | `/api/shipments` | Create ASN (Advanced Shipping Notice) |
+| POST | `/api/shipments/webhook` | Webhook for 3PL status updates |
+| PUT | `/api/shipments/:id/status` | Manual status update |
+| GET | `/api/shipments/in-transit` | Get in-transit summary |
 
 ## License
 

@@ -12,6 +12,7 @@ import Dashboard from '../components/Dashboard'
 import InventoryList from '../components/InventoryList'
 import Transactions from '../components/Transactions'
 import Scanner from '../components/Scanner'
+import Shipments from '../components/Shipments'
 import StockAlert from '../components/StockAlert'
 import OnboardingTour from '../components/OnboardingTour'
 
@@ -53,6 +54,8 @@ export default function Home() {
         return <Dashboard inventory={inventory} transactions={transactions} warehouses={warehouses} />
       case 'inventory':
         return <InventoryList inventory={inventory} onRefresh={fetchData} />
+      case 'shipments':
+        return <Shipments />
       case 'transactions':
         return <Transactions transactions={transactions} />
       case 'scanner':

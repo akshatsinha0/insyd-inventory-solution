@@ -116,6 +116,21 @@ CREATE TABLE allocations (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Shipments table (3PL tracking)
+CREATE TABLE shipments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    sku_id UUID REFERENCES skus(id),
+    warehouse_id UUID REFERENCES warehouses(id),
+    quantity INTEGER NOT NULL,
+    vendor_name VARCHAR(100),
+    tracking_number VARCHAR(100) UNIQUE,
+    status VARCHAR(30) DEFAULT 'DISPATCHED' CHECK (status IN ('DISPATCHED', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED')),
+    current_location VARCHAR(200),
+    expected_arrival DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Create indexes for performance
 CREATE INDEX idx_inventory_sku ON inventory(sku_id);
 CREATE INDEX idx_inventory_warehouse ON inventory(warehouse_id);

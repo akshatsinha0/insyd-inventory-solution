@@ -13,6 +13,7 @@ const transactionRoutes = require('./routes/transactions');
 const warehouseRoutes = require('./routes/warehouses');
 const skuRoutes = require('./routes/skus');
 const analyticsRoutes = require('./routes/analytics');
+const shipmentRoutes = require('./routes/shipments');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,6 +28,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/warehouses', warehouseRoutes);
 app.use('/api/skus', skuRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/shipments', shipmentRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

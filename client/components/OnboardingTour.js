@@ -84,6 +84,25 @@ const tourSteps = [
     arrow: { type: 'up', top: '-45px', left: '80px' }
   },
   {
+    id: 'shipments',
+    title: '3PL Shipment Tracking',
+    description: 'Track in-transit inventory from vendors. Create Advanced Shipping Notices (ASN) and receive webhook updates from logistics providers.',
+    subtext: 'Eliminates the "black box" between dispatch and delivery',
+    position: { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' },
+    spotlight: null,
+    arrow: null,
+    navigateTo: 'shipments'
+  },
+  {
+    id: 'shipments-asn',
+    title: 'Advanced Shipping Notice',
+    description: 'Create ASN when vendors dispatch goods. Track status from DISPATCHED to IN_TRANSIT to DELIVERED. Inventory auto-updates on delivery confirmation.',
+    subtext: 'Simulate webhook updates using the status dropdown',
+    position: { top: '200px', left: '400px' },
+    spotlight: { top: '130px', left: '240px', width: '600px', height: '200px' },
+    arrow: { type: 'up', top: '-45px', left: '120px' }
+  },
+  {
     id: 'scanner',
     title: 'QR/Barcode Scanner',
     description: 'Simulate warehouse floor operations. Enter a SKU code to receive goods or allocate stock, just like scanning a physical barcode.',
