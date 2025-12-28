@@ -12,13 +12,10 @@
 ## Screenshots
 
 ![Dashboard Overview](./images/FORREADME/1.png)
-*Real-time dashboard with KPIs, ABC classification, and critical alerts*
 
 ![Inventory Management](./images/FORREADME/2.png)
-*Inventory list with soft allocation and bin location tracking*
 
 ![Procurement & 3-Way Matching](./images/FORREADME/3.png)
-*Purchase order management with automated 3-way matching*
 
 ---
 
@@ -160,10 +157,6 @@ NODE_ENV=development
 | POST | `/api/invoices/:id/approve` | Approve matched invoice for payment |
 | GET | `/api/invoices/matches` | Get 3-way match results |
 
-## License
-
-MIT License - See LICENSE file for details.
-
 ## Assumptions & Hardcoded Values
 
 This prototype includes the following assumptions and hardcoded values for demonstration purposes:
@@ -194,7 +187,6 @@ This prototype includes the following assumptions and hardcoded values for demon
 - Initial stock quantities: Category A (100 units), B (500 units), C (1000 units)
 
 ### API & Database
-- Supabase project URL: `https://jcnsdcgjklrvtamizvvz.supabase.co`
 - Backend API: `https://insyd-inventory-api.onrender.com/api`
 - CORS origins: localhost:3000, localhost:3002, *.vercel.app
 - Render free tier: Server spins down after 15 minutes of inactivity
