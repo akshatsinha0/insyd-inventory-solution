@@ -38,48 +38,7 @@ const EyeIcon = ({ visible }) => (
   </svg>
 )
 
-/*
- * 1.) Floating Label Input Component.
- * 2.) Animated placeholder moves below input on focus/type.
- */
-const FloatingInput = ({ label, type, value, onChange, placeholder, showToggle, onToggle, isVisible }) => {
-  const [focused, setFocused] = useState(false)
-  const hasValue = value && value.length > 0
-  const isActive = focused || hasValue
 
-  return (
-    <div className="relative mb-4">
-      <div className="relative">
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          className="w-full px-3 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-500 peer"
-        />
-        {showToggle && (
-          <button
-            type="button"
-            onClick={onToggle}
-            className="absolute right-3 top-1/2 -translate-y-1/2"
-          >
-            <EyeIcon visible={isVisible} />
-          </button>
-        )}
-      </div>
-      <label 
-        className={`absolute left-3 transition-all duration-200 pointer-events-none ${
-          isActive 
-            ? '-bottom-5 text-xs text-gray-500' 
-            : 'top-3 text-sm text-gray-400'
-        }`}
-      >
-        {placeholder}
-      </label>
-    </div>
-  )
-}
 
 export default function AuthModal({ onClose, onAuth }) {
   const [mode, setMode] = useState('login')
@@ -178,45 +137,73 @@ export default function AuthModal({ onClose, onAuth }) {
         {/* Form */}
         <form onSubmit={handleSubmit}>
           {mode === 'signup' && (
-            <FloatingInput
-              label="Name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Akshat Sinha"
-            />
+            <div className="relative mb-6">
+              <label className="text-xs text-gray-500 mb-1 block">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-300 text-sm focus:outline-none focus:border-gray-500"
+              />
+              <span className="absolute left-3 top-full mt-1 text-xs text-gray-400">
+                e.g., Akshat Sinha
+              </span>
+            </div>
           )}
 
-          <FloatingInput
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="e.g., akshat@insyd.ai"
-          />
+          <div className="relative mb-6">
+            <label className="text-xs text-gray-500 mb-1 block">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2.5 border border-gray-300 text-sm focus:outline-none focus:border-gray-500"
+            />
+            <span className="absolute left-3 top-full mt-1 text-xs text-gray-400">
+              e.g., akshat@insyd.ai
+            </span>
+          </div>
 
-          <FloatingInput
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="e.g., ••••••••"
-            showToggle={true}
-            onToggle={() => setShowPassword(!showPassword)}
-            isVisible={showPassword}
-          />
+          <div className="relative mb-4">
+            <label className="text-xs text-gray-500 mb-1 block">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="w-full px-3 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-500 peer"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+              >
+                <EyeIcon visible={showPassword} />
+              </button>
+            </div>
+          </div>
 
           {mode === 'signup' && (
-            <FloatingInput
-              label="Confirm Password"
-              type={showConfirmPassword ? 'text' : 'password'}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="e.g., ••••••••"
-              showToggle={true}
-              onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
-              isVisible={showConfirmPassword}
-            />
+            <div className="relative mb-4">
+              <label className="text-xs text-gray-500 mb-1 block">Confirm Password</label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter password"
+                  className="w-full px-3 py-3 border border-gray-300 text-sm focus:outline-none focus:border-gray-500 peer"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  <EyeIcon visible={showConfirmPassword} />
+                </button>
+              </div>
+            </div>
           )}
 
           <button
