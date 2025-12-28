@@ -1207,3 +1207,10 @@ Both CI and deploy workflows use Node.js 20.x to ensure compatibility with Supab
 ## Acknowledgments
 
 Inspired by the Stanley Black & Decker and HCLTech digital transformation partnership, demonstrating how enterprise-grade inventory management principles can be adapted for Indian AEC businesses.
+
+---
+
+## Project Status
+
+[![CI Pipeline](https://github.com/akshatsinha0/insyd-inventory-solution/actions/workflows/ci.yml/badge.svg)](https://github.com/akshatsinha0/insyd-inventory-solution/actions/workflows/ci.yml)
+[![Deploy Pipeline](https://github.com/akshatsinha0/insyd-inventory-solution/actions/workflows/deploy.yml/badge.svg)](https://github.com/akshatsinha0/insyd-inventory-solution/actions/workflows/deploy.yml)
