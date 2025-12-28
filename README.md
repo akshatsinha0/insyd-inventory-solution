@@ -68,13 +68,12 @@ Indian AEC material businesses face critical challenges:
 insyd-inventory-solution/
 ├── client/                 # NextJS frontend
 │   ├── app/               # App router pages
-│   ├── components/        # React components
+│   ├── components/        # React components (modular, SOLID-compliant)
 │   └── lib/               # Utilities
 ├── server/                # ExpressJS backend
 │   ├── routes/            # API routes
-│   ├── controllers/       # Business logic
-│   └── middleware/        # Auth, validation
-└── database/              # Supabase schema
+│   └── lib/               # Supabase client
+└── database/              # PostgreSQL schema & seed data
 ```
 
 ## Getting Started
@@ -113,373 +112,366 @@ PORT=3001
 NODE_ENV=development
 ```
 
+---
+
 ## API Documentation
 
-### Authentication Endpoints
+### Overview: How APIs Solve Real AEC Business Problems
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| POST | `/api/auth/signup` | Create new user account | `{ email, password, name }` | `{ user: { id, email, name }, token }` |
-| POST | `/api/auth/login` | Authenticate user | `{ email, password }` | `{ user: { id, email, name }, token }` |
-| POST | `/api/auth/logout` | End user session | - | `{ message: "Logged out successfully" }` |
-| GET | `/api/auth/me` | Get current user | Header: `Authorization: Bearer <token>` | `{ user: { id, email, name } }` |
+This API suite addresses the core pain points of Indian AEC material businesses by providing real-time data synchronization, preventing overselling through atomic transactions, and enabling end-to-end supply chain visibility.
 
-**Example Response (Login):**
+---
+
+### 1. SKU Endpoints — The Foundation of Inventory Granularity
+
+**Problem Solved:** Indian material businesses often group items under vague categories ("White Marble") instead of specific SKUs, causing phantom inventory where materials exist physically but are "lost" digitally.
+
+**Real-Life Scenario:** A Delhi marble dealer has 3 types of Italian marble (Carrara, Statuario, Calacatta) but tracks them all as "Italian Marble." When a client orders Carrara specifically, the dealer can't confirm availability.
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/skus` | Retrieve all SKUs with ABC categorization |
+| GET | `/api/skus/:id` | Get detailed SKU info including reorder levels |
+
+**Workflow:**
+1. Each material gets a unique SKU code (e.g., `MAR-ITL-001` for Italian Carrara Marble)
+2. SKUs are categorized using ABC Analysis (Pareto Principle)
+3. Category A items (Italian Marble, DeWalt tools) get daily audits
+4. Category C items (screws, adhesives) use visual Two-Bin control
+
 ```json
 {
-  "user": {
-    "id": "uuid-here",
-    "email": "user@insyd.ai",
-    "name": "Akshat Sinha"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "sku_code": "MAR-ITL-001",
+  "name": "Italian Carrara Marble",
+  "category": { "code": "A", "name": "High Value" },
+  "unit_price": 15000.00,
+  "reorder_level": 50,
+  "safety_stock": 20
 }
 ```
 
-### Inventory Endpoints
+---
 
-| Method | Endpoint | Description | Query Params | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/inventory` | List all inventory items | `warehouse_id`, `category` | Array of inventory objects with SKU, warehouse, bin details |
-| GET | `/api/inventory/:id` | Get single inventory item | - | Single inventory object with full details |
-| POST | `/api/inventory` | Add new inventory item | `{ sku_id, warehouse_id, bin_location_id, quantity, batch_number }` | Created inventory object |
-| PUT | `/api/inventory/:id` | Update inventory quantity | `{ quantity, notes }` | Updated inventory object |
-| POST | `/api/inventory/:id/allocate` | Soft allocate stock | `{ quantity, reference_number, expires_in_hours }` | Allocation object |
-| POST | `/api/inventory/:id/receive` | Receive goods (GRN) | `{ quantity, reference_number, notes }` | Updated inventory object |
+### 2. Warehouse & Bin Location Endpoints — Eliminating "Tribal Knowledge"
 
-**Example Response (GET /api/inventory):**
-```json
-[
-  {
-    "id": 1,
-    "sku_id": 1,
-    "warehouse_id": 1,
-    "bin_location_id": 1,
-    "quantity": 100,
-    "allocated_quantity": 20,
-    "batch_number": "BATCH-2025-001",
-    "sku": {
-      "id": 1,
-      "sku_code": "MAR-ITL-001",
-      "name": "Italian Carrara Marble",
-      "unit": "SQM",
-      "unit_price": 15000.00,
-      "category": {
-        "code": "A",
-        "name": "High Value"
-      }
-    },
-    "warehouse": {
-      "code": "WH01",
-      "name": "Delhi Central Warehouse"
-    },
-    "bin_location": {
-      "aisle": "ASL01",
-      "rack": "RK01",
-      "bin": "BN01",
-      "zone": "FAST-PICK"
-    }
-  }
-]
-```
+**Problem Solved:** In most Indian MSMEs, only senior warehouse workers know where specific batches are stored. New hires waste hours searching, and materials get "lost" in large warehouses.
 
-**Example Response (POST /api/inventory/:id/allocate):**
+**Real-Life Scenario:** A 50,000 sq.ft. warehouse in Okhla stores 500+ SKUs. Without bin mapping, finding a specific batch of 12mm steel rebar takes 30+ minutes of searching.
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/warehouses` | List all warehouses (Delhi, Mumbai, Bangalore) |
+| GET | `/api/warehouses/:id/bins` | Get bin locations with zone filtering |
+| POST | `/api/warehouses` | Register new warehouse |
+
+**Bin Location Format:** `WH01-ASL02-RK04-BN10` (Warehouse-Aisle-Rack-Bin)
+
+**Workflow:**
+1. Warehouse is divided into zones (FAST-PICK for Category A, BULK for Category C)
+2. Each bin has a unique alphanumeric code
+3. High-velocity items placed near loading dock (Smart Slotting)
+4. New hire can locate any pallet in under 2 minutes using the app
+
 ```json
 {
-  "id": 5,
-  "inventory_id": 1,
+  "warehouse": { "code": "WH01", "name": "Delhi Central Warehouse" },
+  "bin_location": {
+    "aisle": "ASL01",
+    "rack": "RK01", 
+    "bin": "BN01",
+    "zone": "FAST-PICK"
+  }
+}
+```
+
+---
+
+### 3. Inventory Endpoints — Real-Time Stock Visibility with Atomic Transactions
+
+**Problem Solved:** Data latency (24-48hr lag) and lack of concurrency control cause overselling. A sales executive in the city office sells 50 units while a walk-in customer at the warehouse buys 10 of the same stock.
+
+**Real-Life Scenario:** A granite dealer's Excel sheet shows 50 slabs available. Sales team closes a ₹7.5L contract for all 50. Meanwhile, a contractor at the depot buys 10 slabs. Result: Inventory deficit, emergency procurement at higher prices, damaged reputation.
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/inventory` | Real-time stock levels across all warehouses |
+| POST | `/api/inventory/:id/allocate` | **Soft Allocation** — Atomic lock preventing overselling |
+| POST | `/api/inventory/:id/receive` | Record goods receipt with batch tracking |
+| PUT | `/api/inventory/:id` | Adjust quantities (cycle count corrections) |
+
+**Soft Allocation Workflow (Prevents Overselling):**
+1. Sales executive creates quote for 50 units
+2. System performs `POST /allocate` — creates atomic lock on those 50 units
+3. `allocated_quantity` increases, `available_quantity` decreases
+4. Walk-in customer sees only 40 available (50 total - 10 allocated)
+5. If sale doesn't close in 24hrs, allocation auto-expires
+
+```json
+// POST /api/inventory/:id/allocate
+{
   "quantity": 10,
   "reference_number": "SO-2025-001",
-  "status": "PENDING",
-  "expires_at": "2025-12-29T12:00:00Z",
-  "created_at": "2025-12-28T12:00:00Z"
+  "expires_in_hours": 24
+}
+
+// Response — Stock is now "locked"
+{
+  "quantity": 100,
+  "allocated_quantity": 10,
+  "available_quantity": 90,
+  "status": "PENDING"
 }
 ```
 
-### Transaction Endpoints
+**Technical Implementation:** Uses PostgreSQL row-level locking via Supabase transactions to ensure ACID compliance. Two concurrent requests cannot allocate the same stock.
 
-| Method | Endpoint | Description | Query Params | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/transactions` | Get transaction log | `sku_id`, `warehouse_id`, `type`, `limit` | Array of transaction objects |
-| GET | `/api/transactions/:id` | Get single transaction | - | Single transaction object |
-| POST | `/api/transactions` | Create manual transaction | `{ inventory_id, sku_id, warehouse_id, type, quantity, reference_number, notes }` | Created transaction object |
+---
 
-**Example Response (GET /api/transactions):**
+### 4. Transaction Endpoints — Complete Audit Trail for Compliance
+
+**Problem Solved:** Without transaction logs, businesses can't identify shrinkage sources, perform cycle counts, or calculate accurate Inventory Turnover Ratios.
+
+**Real-Life Scenario:** A warehouse reports 5% shrinkage annually (₹15L loss). Without audit trails, management can't determine if it's theft, damage, or data entry errors.
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/transactions` | Full audit log with filtering |
+| POST | `/api/transactions` | Manual adjustments (damage, returns) |
+
+**Transaction Types:**
+- `RECEIVE` — Goods received from vendor (green badge)
+- `ALLOCATE` — Stock reserved for sales order (blue badge)
+- `SHIP` — Goods dispatched to customer (orange badge)
+- `ADJUST` — Cycle count corrections (purple badge)
+- `TRANSFER` — Inter-warehouse movement
+- `RETURN` — Customer returns
+
+**Workflow:**
+1. Every inventory movement auto-logs a transaction
+2. Filter by SKU to see complete movement history
+3. Identify slow-moving items (no transactions in 30+ days)
+4. Calculate Inventory Turnover: `Cost of Goods Sold / Average Inventory`
+
 ```json
-[
-  {
-    "id": 1,
-    "inventory_id": 1,
-    "sku_id": 1,
-    "warehouse_id": 1,
-    "type": "RECEIVE",
-    "quantity": 100,
-    "reference_number": "GRN-2025-001",
-    "notes": "Goods received from vendor",
-    "performed_by": "warehouse@insyd.ai",
-    "created_at": "2025-12-28T10:30:00Z",
-    "sku": {
-      "sku_code": "MAR-ITL-001",
-      "name": "Italian Carrara Marble"
-    },
-    "warehouse": {
-      "code": "WH01",
-      "name": "Delhi Central Warehouse"
-    }
-  }
-]
+{
+  "type": "RECEIVE",
+  "quantity": 100,
+  "reference_number": "GRN-2025-001",
+  "notes": "Goods received from JSW Steel",
+  "performed_by": "warehouse@insyd.ai",
+  "created_at": "2025-12-28T10:30:00Z"
+}
 ```
 
-### Shipment Endpoints (3PL Integration)
+---
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/shipments` | List all shipments | Query: `status` | Array of shipment objects |
-| POST | `/api/shipments` | Create ASN (Advanced Shipping Notice) | `{ sku_id, warehouse_id, quantity, vendor_name, tracking_number, expected_arrival }` | Created shipment object |
-| POST | `/api/shipments/webhook` | Webhook for 3PL status updates | `{ tracking_number, status, location, timestamp }` | `{ success: true, shipment }` |
-| PUT | `/api/shipments/:id/status` | Manual status update | `{ status, location }` | Updated shipment object |
-| GET | `/api/shipments/in-transit` | Get in-transit summary | - | Summary with total shipments, units, value |
+### 5. Shipment Endpoints — Eliminating the "Black Box" of In-Transit Inventory
 
-**Example Response (GET /api/shipments):**
+**Problem Solved:** The gap between vendor dispatch and warehouse receipt is a "black box." Fragmented communication (WhatsApp/phone calls) causes loading dock bottlenecks and stockout panics.
+
+**Real-Life Scenario:** A construction project needs 500 bags of cement by Monday. The vendor dispatched Friday, but the warehouse manager has no visibility. Truck arrives Monday at 5 PM — project delayed.
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/shipments` | List all shipments with status |
+| POST | `/api/shipments` | Create ASN (Advanced Shipping Notice) |
+| POST | `/api/shipments/webhook` | **Webhook** — 3PL providers push status updates |
+| GET | `/api/shipments/in-transit` | Dashboard summary of in-transit value |
+
+**ASN (Advanced Shipping Notice) Workflow:**
+1. Vendor dispatches goods, creates ASN with tracking number
+2. System flags inventory as "In-Transit" (not yet available for sale)
+3. Warehouse manager gets 48-hour advance notice to clear floor space
+4. 3PL provider (Delhivery, BlueDart) sends webhook updates at each checkpoint
+5. On `DELIVERED` status, inventory auto-updates and transaction logs
+
+**Webhook Integration:**
 ```json
-[
-  {
-    "id": 1,
-    "sku_id": 2,
-    "warehouse_id": 1,
-    "quantity": 50,
-    "vendor_name": "JSW Steel",
-    "tracking_number": "DEL-2025-001",
-    "status": "IN_TRANSIT",
-    "current_location": "Transit Hub Delhi",
-    "expected_arrival": "2025-12-30",
-    "created_at": "2025-12-28T08:00:00Z",
-    "sku": {
-      "sku_code": "STL-JSW-002",
-      "name": "JSW Steel Rebar 12mm"
-    },
-    "warehouse": {
-      "code": "WH01",
-      "name": "Delhi Central Warehouse"
-    }
-  }
-]
+// POST /api/shipments/webhook (called by 3PL provider)
+{
+  "tracking_number": "DEL-2025-001",
+  "status": "IN_TRANSIT",
+  "location": "Transit Hub Delhi",
+  "timestamp": "2025-12-28T14:00:00Z"
+}
+
+// When status = "DELIVERED", system automatically:
+// 1. Updates inventory quantity
+// 2. Logs RECEIVE transaction
+// 3. Clears shipment from in-transit dashboard
 ```
 
-**Example Response (GET /api/shipments/in-transit):**
+**In-Transit Summary:** Shows total value of goods in transit — critical for working capital planning.
+
 ```json
 {
   "total_shipments": 3,
   "total_units": 150,
-  "total_value": 975000.00,
-  "shipments": [...]
+  "total_value": 975000.00
 }
 ```
 
-### Procurement Endpoints (3-Way Matching)
+---
 
-#### Purchase Orders
+### 6. Procurement Endpoints — 3-Way Matching for Financial Integrity
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/purchase-orders` | List all purchase orders | Query: `status` | Array of PO objects with line items |
-| GET | `/api/purchase-orders/:id` | Get single PO | - | PO object with full details |
-| POST | `/api/purchase-orders` | Create new PO | `{ vendor_name, warehouse_id, expected_delivery, notes, created_by, line_items }` | Created PO object |
-| POST | `/api/purchase-orders/:id/approve` | Approve PO | `{ approved_by }` | Updated PO object |
-| POST | `/api/purchase-orders/:id/send` | Send PO to vendor | - | Updated PO object |
+**Problem Solved:** Without systematic verification, vendor errors (short-shipping, overbilling) go undetected. Finance pays invoices without confirming goods were actually received.
 
-**Example Response (POST /api/purchase-orders):**
+**Real-Life Scenario:** Vendor invoices for 100 units at ₹500 each (₹50,000). Warehouse received only 90 units. Without 3-way matching, finance pays full amount — ₹5,000 loss.
+
+#### 6.1 Purchase Orders (PO)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/purchase-orders` | List all POs with status |
+| POST | `/api/purchase-orders` | Create new PO with line items |
+| POST | `/api/purchase-orders/:id/approve` | Manager approval workflow |
+| POST | `/api/purchase-orders/:id/send` | Mark as sent to vendor |
+
+**PO Workflow:**
+1. Procurement creates PO specifying SKUs, quantities, prices
+2. Manager approves (status: DRAFT → APPROVED)
+3. PO sent to vendor (status: APPROVED → SENT)
+4. System tracks expected delivery date
+
 ```json
 {
-  "id": 1,
   "po_number": "PO-1735380000000",
   "vendor_name": "JSW Steel Ltd",
-  "warehouse_id": 1,
   "total_amount": 650000.00,
-  "status": "DRAFT",
-  "expected_delivery": "2026-01-05",
-  "created_by": "procurement@insyd.ai",
-  "created_at": "2025-12-28T12:00:00Z"
+  "status": "SENT",
+  "line_items": [
+    { "sku_code": "STL-JSW-002", "quantity_ordered": 100, "unit_price": 6500.00 }
+  ]
 }
 ```
 
-#### Goods Received Notes (GRN)
+#### 6.2 Goods Received Notes (GRN)
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/grns` | List all GRNs | - | Array of GRN objects |
-| POST | `/api/grns` | Create GRN from PO | `{ po_id, warehouse_id, received_by, notes, line_items }` | Created GRN object |
-| POST | `/api/grns/:id/approve` | Approve GRN and update inventory | - | Updated GRN object |
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/grns` | List all GRNs |
+| POST | `/api/grns` | Create GRN against PO |
+| POST | `/api/grns/:id/approve` | Approve and update inventory |
 
-**Example Response (POST /api/grns):**
+**GRN Workflow (Gate-Level Verification):**
+1. Goods arrive at warehouse gate
+2. Staff creates GRN linked to original PO
+3. Physical count recorded: `quantity_received`, `quantity_rejected`
+4. Batch numbers assigned for traceability
+5. Discrepancies flagged immediately (received 90 vs ordered 100)
+
 ```json
 {
-  "id": 1,
   "grn_number": "GRN-1735380100000",
-  "po_id": 1,
-  "warehouse_id": 1,
-  "received_by": "warehouse@insyd.ai",
-  "status": "PENDING",
-  "created_at": "2025-12-28T13:00:00Z"
+  "po_id": "uuid-of-po",
+  "line_items": [
+    { 
+      "sku_id": "uuid", 
+      "quantity_received": 90, 
+      "quantity_rejected": 5,
+      "batch_number": "BATCH-JSW-2025-001"
+    }
+  ]
 }
 ```
 
-#### Invoices
+#### 6.3 Invoices & 3-Way Matching
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/invoices` | List all invoices | Query: `status` | Array of invoice objects |
-| POST | `/api/invoices` | Enter invoice and trigger 3-way match | `{ invoice_number, po_id, grn_id, vendor_name, invoice_date, due_date, tax_amount, line_items }` | Created invoice object |
-| POST | `/api/invoices/:id/approve` | Approve matched invoice for payment | `{ approved_by }` | Updated invoice object |
-| GET | `/api/invoices/matches` | Get 3-way match results | - | Array of match objects |
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/invoices` | List all invoices |
+| POST | `/api/invoices` | Enter invoice, triggers auto-matching |
+| GET | `/api/invoices/matches` | View match results with variances |
+| POST | `/api/invoices/:id/approve` | Approve for payment |
 
-**Example Response (GET /api/invoices/matches):**
+**3-Way Match Workflow:**
+1. Vendor sends invoice
+2. Finance enters invoice details
+3. System automatically compares:
+   - **PO Total:** What we ordered (₹6,50,000)
+   - **GRN Total:** What we received (₹5,85,000 for 90 units)
+   - **Invoice Total:** What vendor is charging (₹6,50,000)
+4. Variance detected: ₹65,000 discrepancy
+5. Status: `DISCREPANCY` — requires investigation before payment
+
 ```json
-[
-  {
-    "id": 1,
-    "po_id": 1,
-    "grn_id": 1,
-    "invoice_id": 1,
-    "match_status": "MATCHED",
-    "po_total": 650000.00,
-    "grn_total": 650000.00,
-    "invoice_total": 650000.00,
-    "quantity_variance": 0,
-    "amount_variance": 0.00,
-    "discrepancy_notes": null,
-    "created_at": "2025-12-28T14:00:00Z",
-    "po": {
-      "po_number": "PO-1735380000000",
-      "vendor_name": "JSW Steel Ltd"
-    },
-    "grn": {
-      "grn_number": "GRN-1735380100000"
-    },
-    "invoice": {
-      "invoice_number": "INV-JSW-2025-001",
-      "total_amount": 650000.00
-    }
-  }
-]
+{
+  "match_status": "DISCREPANCY",
+  "po_total": 650000.00,
+  "grn_total": 585000.00,
+  "invoice_total": 650000.00,
+  "amount_variance": 65000.00,
+  "discrepancy_notes": "Vendor invoiced for 100 units, only 90 received"
+}
 ```
 
-### Warehouse Endpoints
+**Business Impact:** Prevents payment leakage, ensures vendor accountability, maintains accurate cost records.
 
-| Method | Endpoint | Description | Query Params | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/warehouses` | List all active warehouses | - | Array of warehouse objects |
-| GET | `/api/warehouses/:id` | Get warehouse with bin locations | - | Warehouse object with bins |
-| GET | `/api/warehouses/:id/bins` | Get bin locations for warehouse | `zone`, `available` | Array of bin location objects |
-| POST | `/api/warehouses` | Create new warehouse | `{ code, name, address, city }` | Created warehouse object |
+---
 
-**Example Response (GET /api/warehouses):**
-```json
-[
-  {
-    "id": 1,
-    "code": "WH01",
-    "name": "Delhi Central Warehouse",
-    "address": "123 Industrial Area, Okhla",
-    "city": "Delhi",
-    "is_active": true,
-    "created_at": "2025-12-28T00:00:00Z"
-  }
-]
-```
+### 7. Authentication Endpoints — Secure Access Control
 
-### SKU Endpoints
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/api/auth/signup` | Create user account |
+| POST | `/api/auth/login` | Authenticate and get JWT token |
+| POST | `/api/auth/logout` | End session |
+| GET | `/api/auth/me` | Get current user profile |
 
-| Method | Endpoint | Description | Query Params | Response |
-|--------|----------|-------------|--------------|----------|
-| GET | `/api/skus` | List all SKUs | `search`, `category` | Array of SKU objects |
-| GET | `/api/skus/:id` | Get single SKU | - | SKU object with category details |
+**Implementation:** Uses Supabase Auth with JWT tokens. In production, tokens should be stored in httpOnly cookies for security.
 
-**Example Response (GET /api/skus):**
-```json
-[
-  {
-    "id": 1,
-    "sku_code": "MAR-ITL-001",
-    "name": "Italian Carrara Marble",
-    "description": "Premium white marble from Carrara, Italy. 20mm thickness.",
-    "category_id": 1,
-    "unit": "SQM",
-    "unit_price": 15000.00,
-    "reorder_level": 50,
-    "safety_stock": 20,
-    "category": {
-      "code": "A",
-      "name": "High Value",
-      "description": "Premium materials requiring daily/weekly audits"
-    }
-  }
-]
-```
+---
 
-### Error Responses
+### Error Handling
 
 All endpoints return consistent error responses:
 
 ```json
 {
-  "error": "Error message describing what went wrong"
+  "error": "Descriptive error message"
 }
 ```
 
-**Common HTTP Status Codes:**
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request (validation error)
-- `401` - Unauthorized (authentication required)
-- `404` - Not Found
-- `500` - Internal Server Error
+| Status Code | Meaning |
+|-------------|---------|
+| `200` | Success |
+| `201` | Created |
+| `400` | Bad Request (validation error) |
+| `401` | Unauthorized (authentication required) |
+| `404` | Not Found |
+| `500` | Internal Server Error |
+
+---
 
 ## Assumptions & Hardcoded Values
 
-This prototype includes the following assumptions and hardcoded values for demonstration purposes:
-
 ### Authentication
-- Default user email format: `user@insyd.ai` or `procurement@insyd.ai`
-- No email verification required (Supabase Auth configured for development)
-- Session tokens stored in localStorage (production should use httpOnly cookies)
+- Default user emails: `user@insyd.ai`, `procurement@insyd.ai`
+- No email verification (development mode)
+- Session tokens in localStorage (production: httpOnly cookies)
 
 ### Procurement
-- Default created_by: `procurement@insyd.ai`
-- PO numbers auto-generated as: `PO-{timestamp}`
-- GRN numbers auto-generated as: `GRN-{timestamp}`
-- Invoice matching tolerance: ₹0.01 (1 paisa variance allowed)
+- PO numbers: `PO-{timestamp}`
+- GRN numbers: `GRN-{timestamp}`
+- Invoice matching tolerance: ₹0.01
 
 ### Inventory
-- Default batch number format: `BATCH-2025-001` or `BATCH-SBD-2025`
-- Bin location format: `WH01-ASL01-RK01-BN01` (Warehouse-Aisle-Rack-Bin)
-- ABC categorization thresholds:
-  - Category A: 70-80% of value, 20% of items
-  - Category B: 15-25% of value, 30% of items
-  - Category C: 5-10% of value, 50% of items
+- Batch format: `BATCH-2025-001`
+- Bin format: `WH01-ASL01-RK01-BN01`
+- ABC thresholds: A (70-80% value), B (15-25%), C (5-10%)
 
 ### Seed Data
 - 3 warehouses: Delhi (WH01), Mumbai (WH02), Bangalore (WH03)
 - 15 SKUs: 6 AEC materials + 9 Stanley Black & Decker tools
-- Sample vendors: JSW Steel, Somany Ceramics, DeWalt, Craftsman, Stanley
-- Initial stock quantities: Category A (100 units), B (500 units), C (1000 units)
-
-### API & Database
-- Backend API: `https://insyd-inventory-api.onrender.com/api`
-- CORS origins: localhost:3000, localhost:3002, *.vercel.app
-- Render free tier: Server spins down after 15 minutes of inactivity
-
-### UI/UX
-- Currency: Indian Rupees (₹)
-- Date format: Locale-based (DD/MM/YYYY for India)
-- Allocation expiry: 24 hours (not enforced in prototype)
-- Onboarding tour: Shown once, stored in localStorage as `insyd_tour_completed`
+- Vendors: JSW Steel, Somany Ceramics, DeWalt, Craftsman, Stanley
 
 ### Business Logic
-- Soft allocation prevents overselling but doesn't enforce time limits
-- Dead stock detection: Items with no transactions in last 50 records
-- Overstocked threshold: 2x (safety_stock + reorder_level)
-- 3-way matching: Compares PO, GRN, and Invoice totals with variance tracking
+- Soft allocation prevents overselling (24hr expiry, not enforced in prototype)
+- Dead stock: No transactions in last 50 records
+- Overstocked: 2x (safety_stock + reorder_level)
+
+---
 
 ## Author
 
