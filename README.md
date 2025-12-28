@@ -9,7 +9,7 @@
 - **Database**: Supabase PostgreSQL (Cloud)
 - **GitHub Repository**: [https://github.com/akshatsinha0/insyd-inventory-solution](https://github.com/akshatsinha0/insyd-inventory-solution)
 
-## Screenshots
+## Screenshots (using eraser.io)
 
 ![Dashboard Overview](./images/FORREADME/1.png)
 
