@@ -1159,3 +1159,51 @@ Akshat Sinha - [GitHub](https://github.com/akshatsinha0)
 
 *Built for Insyd SDE Intern Assignment - December 2025*
 
+
+
+---
+
+## CI/CD Configuration
+
+### GitHub Actions Workflows
+
+This project includes automated CI/CD pipelines using GitHub Actions:
+
+**CI Pipeline** (`.github/workflows/ci.yml`): Runs on every push and pull request to main/develop branches. Includes linting, building, testing, and security audits.
+
+**Deploy Pipeline** (`.github/workflows/deploy.yml`): Automatically deploys to production on push to main branch. Client deploys to Vercel, server deploys to Render.
+
+### Required GitHub Secrets
+
+To enable CI/CD workflows, add the following secrets to your GitHub repository (Settings → Secrets and variables → Actions → New repository secret):
+
+**Client Deployment (Vercel):**
+- `VERCEL_TOKEN`: Your Vercel authentication token (get from Vercel dashboard → Settings → Tokens)
+- `NEXT_PUBLIC_API_URL`: Production API URL (e.g., `https://insyd-inventory-api.onrender.com/api`)
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+
+**Server Deployment (Render):**
+- `RENDER_DEPLOY_HOOK_URL`: Render deploy hook URL (get from Render dashboard → Service → Settings → Deploy Hook)
+
+**Server Testing:**
+- `SUPABASE_URL`: Your Supabase project URL (same as NEXT_PUBLIC_SUPABASE_URL)
+- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key (from Supabase dashboard → Settings → API)
+
+### Node.js Version
+
+Both CI and deploy workflows use Node.js 20.x to ensure compatibility with Supabase client library requirements.
+
+---
+
+## Author
+
+**Akshat Sinha**
+- Email: akshat@githubworks.com
+- GitHub: [@akshatsinha0](https://github.com/akshatsinha0)
+
+---
+
+## Acknowledgments
+
+Inspired by the Stanley Black & Decker and HCLTech digital transformation partnership, demonstrating how enterprise-grade inventory management principles can be adapted for Indian AEC businesses.
