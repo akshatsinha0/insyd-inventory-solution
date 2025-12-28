@@ -68,7 +68,7 @@ INSERT INTO warehouses (code, name, address, city) VALUES
 ('WH02', 'Mumbai Distribution Center', '456 MIDC, Andheri East', 'Mumbai'),
 ('WH03', 'Bangalore Hub', '789 Electronic City', 'Bangalore');
 
--- Insert bin locations for WH01
+-- Insert bin locations for all warehouses
 INSERT INTO bin_locations (warehouse_id, aisle, rack, bin, zone)
 SELECT 
     w.id,
@@ -80,7 +80,7 @@ FROM warehouses w
 CROSS JOIN generate_series(1, 3) AS a(n)
 CROSS JOIN generate_series(1, 4) AS r(n)
 CROSS JOIN generate_series(1, 10) AS b(n)
-WHERE w.code = 'WH01';
+WHERE w.code IN ('WH01', 'WH02', 'WH03');
 
 -- Insert sample SKUs
 INSERT INTO skus (sku_code, name, description, category_id, unit, unit_price, reorder_level, safety_stock)
@@ -266,7 +266,7 @@ SELECT
     25
 FROM categories c WHERE c.code = 'C';
 
--- Insert initial inventory
+-- Insert initial inventory for WH01 (Delhi)
 INSERT INTO inventory (sku_id, warehouse_id, bin_location_id, quantity, batch_number)
 SELECT 
     s.id,
@@ -285,7 +285,7 @@ JOIN bin_locations b ON b.warehouse_id = w.id
 WHERE w.code = 'WH01'
 AND b.aisle = 'ASL01' AND b.rack = 'RK01' AND b.bin = 'BN01';
 
--- Add Stanley Black & Decker tools inventory
+-- Add Stanley Black & Decker tools inventory for WH01
 INSERT INTO inventory (sku_id, warehouse_id, bin_location_id, quantity, batch_number)
 SELECT 
     s.id,
@@ -302,6 +302,92 @@ JOIN categories c ON s.category_id = c.id
 CROSS JOIN warehouses w
 JOIN bin_locations b ON b.warehouse_id = w.id
 WHERE w.code = 'WH01'
+AND b.aisle = 'ASL01' AND b.rack = 'RK02' AND b.bin = 'BN01'
+AND s.sku_code IN (
+    'DWT-DRL-001', 'DWT-SAW-002', 'DWT-GRN-003',
+    'CRF-SET-001', 'CRF-HAM-002', 'BST-NAL-003',
+    'STN-TPM-001', 'STN-SCR-002', 'BLK-BIT-003'
+);
+
+-- Insert inventory for WH02 (Mumbai)
+INSERT INTO inventory (sku_id, warehouse_id, bin_location_id, quantity, batch_number)
+SELECT 
+    s.id,
+    w.id,
+    b.id,
+    CASE 
+        WHEN c.code = 'A' THEN 80
+        WHEN c.code = 'B' THEN 400
+        ELSE 800
+    END,
+    'BATCH-2025-002'
+FROM skus s
+JOIN categories c ON s.category_id = c.id
+CROSS JOIN warehouses w
+JOIN bin_locations b ON b.warehouse_id = w.id
+WHERE w.code = 'WH02'
+AND b.aisle = 'ASL01' AND b.rack = 'RK01' AND b.bin = 'BN01';
+
+-- Add Stanley Black & Decker tools inventory for WH02
+INSERT INTO inventory (sku_id, warehouse_id, bin_location_id, quantity, batch_number)
+SELECT 
+    s.id,
+    w.id,
+    b.id,
+    CASE 
+        WHEN c.code = 'A' THEN 40
+        WHEN c.code = 'B' THEN 120
+        ELSE 250
+    END,
+    'BATCH-SBD-2025-MUM'
+FROM skus s
+JOIN categories c ON s.category_id = c.id
+CROSS JOIN warehouses w
+JOIN bin_locations b ON b.warehouse_id = w.id
+WHERE w.code = 'WH02'
+AND b.aisle = 'ASL01' AND b.rack = 'RK02' AND b.bin = 'BN01'
+AND s.sku_code IN (
+    'DWT-DRL-001', 'DWT-SAW-002', 'DWT-GRN-003',
+    'CRF-SET-001', 'CRF-HAM-002', 'BST-NAL-003',
+    'STN-TPM-001', 'STN-SCR-002', 'BLK-BIT-003'
+);
+
+-- Insert inventory for WH03 (Bangalore)
+INSERT INTO inventory (sku_id, warehouse_id, bin_location_id, quantity, batch_number)
+SELECT 
+    s.id,
+    w.id,
+    b.id,
+    CASE 
+        WHEN c.code = 'A' THEN 120
+        WHEN c.code = 'B' THEN 600
+        ELSE 1200
+    END,
+    'BATCH-2025-003'
+FROM skus s
+JOIN categories c ON s.category_id = c.id
+CROSS JOIN warehouses w
+JOIN bin_locations b ON b.warehouse_id = w.id
+WHERE w.code = 'WH03'
+AND b.aisle = 'ASL01' AND b.rack = 'RK01' AND b.bin = 'BN01';
+
+-- Add Stanley Black & Decker tools inventory for WH03
+INSERT INTO inventory (sku_id, warehouse_id, bin_location_id, quantity, batch_number)
+SELECT 
+    s.id,
+    w.id,
+    b.id,
+    CASE 
+        WHEN c.code = 'A' THEN 60
+        WHEN c.code = 'B' THEN 180
+        ELSE 350
+    END,
+    'BATCH-SBD-2025-BLR'
+FROM skus s
+JOIN categories c ON s.category_id = c.id
+CROSS JOIN warehouses w
+JOIN bin_locations b ON b.warehouse_id = w.id
+WHERE w.code = 'WH03'
 AND b.aisle = 'ASL01' AND b.rack = 'RK02' AND b.bin = 'BN01'
 AND s.sku_code IN (
     'DWT-DRL-001', 'DWT-SAW-002', 'DWT-GRN-003',
