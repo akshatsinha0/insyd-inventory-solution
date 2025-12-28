@@ -143,14 +143,132 @@ This API suite addresses the core pain points of Indian AEC material businesses 
 3. Category A items (Italian Marble, DeWalt tools) get daily audits
 4. Category C items (screws, adhesives) use visual Two-Bin control
 
+**Example Request:**
+```bash
+GET /api/skus?category=A&search=marble
+```
+
+**Example Response (GET /api/skus):**
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "sku_code": "MAR-ITL-001",
+    "name": "Italian Carrara Marble",
+    "description": "Premium white marble from Carrara, Italy. 20mm thickness. Ideal for luxury hotel lobbies, high-end residential flooring, and feature walls.",
+    "category_id": "550e8400-e29b-41d4-a716-446655440010",
+    "category": {
+      "code": "A",
+      "name": "High Value",
+      "description": "Premium materials requiring daily/weekly audits",
+      "audit_frequency": "Daily/Weekly",
+      "value_percentage": "70-80%"
+    },
+    "unit": "SQM",
+    "unit_price": 15000.00,
+    "reorder_level": 50,
+    "safety_stock": 20,
+    "is_active": true,
+    "created_at": "2025-12-28T00:00:00Z",
+    "updated_at": "2025-12-28T00:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "sku_code": "MAR-ITL-002",
+    "name": "Italian Statuario Marble",
+    "description": "Ultra-premium white marble with dramatic grey veining. 25mm thickness. Used in luxury bathroom vanities and statement walls.",
+    "category_id": "550e8400-e29b-41d4-a716-446655440010",
+    "category": {
+      "code": "A",
+      "name": "High Value",
+      "description": "Premium materials requiring daily/weekly audits",
+      "audit_frequency": "Daily/Weekly",
+      "value_percentage": "70-80%"
+    },
+    "unit": "SQM",
+    "unit_price": 22000.00,
+    "reorder_level": 30,
+    "safety_stock": 15,
+    "is_active": true,
+    "created_at": "2025-12-28T00:00:00Z",
+    "updated_at": "2025-12-28T00:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440007",
+    "sku_code": "DWT-DRL-001",
+    "name": "DeWalt 20V MAX Cordless Drill",
+    "description": "Professional-grade cordless drill with 2-speed transmission. Includes 2 batteries, charger, and carrying case. Model: DCD771C2.",
+    "category_id": "550e8400-e29b-41d4-a716-446655440010",
+    "category": {
+      "code": "A",
+      "name": "High Value",
+      "description": "Premium materials requiring daily/weekly audits",
+      "audit_frequency": "Daily/Weekly",
+      "value_percentage": "70-80%"
+    },
+    "unit": "PCS",
+    "unit_price": 8500.00,
+    "reorder_level": 20,
+    "safety_stock": 10,
+    "is_active": true,
+    "created_at": "2025-12-28T00:00:00Z",
+    "updated_at": "2025-12-28T00:00:00Z"
+  }
+]
+```
+
+**Example Response (GET /api/skus/:id):**
 ```json
 {
+  "id": "550e8400-e29b-41d4-a716-446655440001",
   "sku_code": "MAR-ITL-001",
   "name": "Italian Carrara Marble",
-  "category": { "code": "A", "name": "High Value" },
+  "description": "Premium white marble from Carrara, Italy. 20mm thickness. Ideal for luxury hotel lobbies, high-end residential flooring, and feature walls.",
+  "category_id": "550e8400-e29b-41d4-a716-446655440010",
+  "category": {
+    "code": "A",
+    "name": "High Value",
+    "description": "Premium materials requiring daily/weekly audits",
+    "audit_frequency": "Daily/Weekly",
+    "value_percentage": "70-80%"
+  },
+  "unit": "SQM",
   "unit_price": 15000.00,
   "reorder_level": 50,
-  "safety_stock": 20
+  "safety_stock": 20,
+  "is_active": true,
+  "created_at": "2025-12-28T00:00:00Z",
+  "updated_at": "2025-12-28T00:00:00Z",
+  "current_stock_levels": [
+    {
+      "warehouse_code": "WH01",
+      "warehouse_name": "Delhi Central Warehouse",
+      "total_quantity": 120,
+      "allocated_quantity": 25,
+      "available_quantity": 95
+    },
+    {
+      "warehouse_code": "WH02",
+      "warehouse_name": "Mumbai Distribution Center",
+      "total_quantity": 80,
+      "allocated_quantity": 10,
+      "available_quantity": 70
+    }
+  ],
+  "recent_transactions": [
+    {
+      "type": "RECEIVE",
+      "quantity": 50,
+      "warehouse": "WH01",
+      "created_at": "2025-12-27T14:30:00Z"
+    },
+    {
+      "type": "SHIP",
+      "quantity": -30,
+      "warehouse": "WH01",
+      "created_at": "2025-12-26T10:15:00Z"
+    }
+  ]
 }
 ```
 
@@ -182,16 +300,142 @@ This API suite addresses the core pain points of Indian AEC material businesses 
 3. High-velocity items placed near loading dock (Smart Slotting)
 4. New hire can locate any pallet in under 2 minutes using the app
 
+**Example Request:**
+```bash
+GET /api/warehouses/550e8400-e29b-41d4-a716-446655440020/bins?zone=FAST-PICK&available=true
+```
+
+**Example Response (GET /api/warehouses):**
 ```json
-{
-  "warehouse": { "code": "WH01", "name": "Delhi Central Warehouse" },
-  "bin_location": {
-    "aisle": "ASL01",
-    "rack": "RK01", 
-    "bin": "BN01",
-    "zone": "FAST-PICK"
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440020",
+    "code": "WH01",
+    "name": "Delhi Central Warehouse",
+    "address": "Plot 123, Sector 58, Okhla Industrial Area Phase III",
+    "city": "Delhi",
+    "state": "Delhi",
+    "pincode": "110020",
+    "is_active": true,
+    "total_capacity_sqft": 50000,
+    "occupied_capacity_sqft": 32500,
+    "utilization_percentage": 65.0,
+    "total_bins": 450,
+    "occupied_bins": 312,
+    "manager_name": "Rajesh Kumar",
+    "manager_contact": "+91-98765-43210",
+    "created_at": "2025-01-15T00:00:00Z",
+    "updated_at": "2025-12-28T00:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440021",
+    "code": "WH02",
+    "name": "Mumbai Distribution Center",
+    "address": "Godown No. 45, MIDC Industrial Estate, Andheri East",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "pincode": "400093",
+    "is_active": true,
+    "total_capacity_sqft": 35000,
+    "occupied_capacity_sqft": 28000,
+    "utilization_percentage": 80.0,
+    "total_bins": 320,
+    "occupied_bins": 275,
+    "manager_name": "Priya Sharma",
+    "manager_contact": "+91-98765-43211",
+    "created_at": "2025-02-20T00:00:00Z",
+    "updated_at": "2025-12-28T00:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440022",
+    "code": "WH03",
+    "name": "Bangalore Logistics Hub",
+    "address": "Warehouse Complex, Whitefield Industrial Area",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "pincode": "560066",
+    "is_active": true,
+    "total_capacity_sqft": 42000,
+    "occupied_capacity_sqft": 25200,
+    "utilization_percentage": 60.0,
+    "total_bins": 380,
+    "occupied_bins": 198,
+    "manager_name": "Arun Reddy",
+    "manager_contact": "+91-98765-43212",
+    "created_at": "2025-03-10T00:00:00Z",
+    "updated_at": "2025-12-28T00:00:00Z"
   }
-}
+]
+```
+
+**Example Response (GET /api/warehouses/:id/bins):**
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440030",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "warehouse_code": "WH01",
+    "aisle": "ASL01",
+    "rack": "RK01",
+    "bin": "BN01",
+    "full_code": "WH01-ASL01-RK01-BN01",
+    "zone": "FAST-PICK",
+    "capacity_cubic_meters": 12.5,
+    "occupied_cubic_meters": 10.2,
+    "is_available": true,
+    "current_sku": {
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "quantity": 45,
+      "batch_number": "BATCH-2025-001"
+    },
+    "distance_from_dock_meters": 15,
+    "last_picked_at": "2025-12-27T16:45:00Z",
+    "pick_frequency_last_30_days": 28,
+    "created_at": "2025-01-15T00:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440031",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "warehouse_code": "WH01",
+    "aisle": "ASL01",
+    "rack": "RK01",
+    "bin": "BN02",
+    "full_code": "WH01-ASL01-RK01-BN02",
+    "zone": "FAST-PICK",
+    "capacity_cubic_meters": 12.5,
+    "occupied_cubic_meters": 8.7,
+    "is_available": true,
+    "current_sku": {
+      "sku_code": "DWT-DRL-001",
+      "name": "DeWalt 20V MAX Cordless Drill",
+      "quantity": 32,
+      "batch_number": "BATCH-DWT-2025-003"
+    },
+    "distance_from_dock_meters": 18,
+    "last_picked_at": "2025-12-28T09:20:00Z",
+    "pick_frequency_last_30_days": 35,
+    "created_at": "2025-01-15T00:00:00Z"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440032",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "warehouse_code": "WH01",
+    "aisle": "ASL01",
+    "rack": "RK02",
+    "bin": "BN01",
+    "full_code": "WH01-ASL01-RK02-BN01",
+    "zone": "FAST-PICK",
+    "capacity_cubic_meters": 15.0,
+    "occupied_cubic_meters": 0.0,
+    "is_available": true,
+    "current_sku": null,
+    "distance_from_dock_meters": 22,
+    "last_picked_at": null,
+    "pick_frequency_last_30_days": 0,
+    "created_at": "2025-01-15T00:00:00Z"
+  }
+]
 ```
 
 ---
@@ -224,21 +468,176 @@ This API suite addresses the core pain points of Indian AEC material businesses 
 4. Walk-in customer sees only 40 available (50 total - 10 allocated)
 5. If sale doesn't close in 24hrs, allocation auto-expires
 
+**Example Request (POST /api/inventory/:id/allocate):**
 ```json
-// POST /api/inventory/:id/allocate
 {
   "quantity": 10,
   "reference_number": "SO-2025-001",
-  "expires_in_hours": 24
+  "expires_in_hours": 24,
+  "allocated_by": "sales@insyd.ai",
+  "customer_name": "Oberoi Hotels - Lobby Project",
+  "notes": "Pending final approval from architect"
 }
+```
 
-// Response — Stock is now "locked"
+**Example Response (POST /api/inventory/:id/allocate):**
+```json
 {
-  "quantity": 100,
-  "allocated_quantity": 10,
-  "available_quantity": 90,
-  "status": "PENDING"
+  "allocation_id": "550e8400-e29b-41d4-a716-446655440050",
+  "inventory_id": "550e8400-e29b-41d4-a716-446655440040",
+  "sku": {
+    "sku_code": "MAR-ITL-001",
+    "name": "Italian Carrara Marble",
+    "unit": "SQM"
+  },
+  "warehouse": {
+    "code": "WH01",
+    "name": "Delhi Central Warehouse"
+  },
+  "quantity": 10,
+  "reference_number": "SO-2025-001",
+  "status": "PENDING",
+  "allocated_by": "sales@insyd.ai",
+  "customer_name": "Oberoi Hotels - Lobby Project",
+  "notes": "Pending final approval from architect",
+  "expires_at": "2025-12-29T12:00:00Z",
+  "created_at": "2025-12-28T12:00:00Z",
+  "inventory_snapshot": {
+    "quantity_before": 100,
+    "allocated_quantity_before": 0,
+    "available_quantity_before": 100,
+    "quantity_after": 100,
+    "allocated_quantity_after": 10,
+    "available_quantity_after": 90
+  }
 }
+```
+
+**Example Response (GET /api/inventory):**
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440040",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440001",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "bin_location_id": "550e8400-e29b-41d4-a716-446655440030",
+    "quantity": 100,
+    "allocated_quantity": 20,
+    "available_quantity": 80,
+    "batch_number": "BATCH-2025-001",
+    "expiry_date": null,
+    "last_counted_at": "2025-12-27T10:00:00Z",
+    "created_at": "2025-12-20T00:00:00Z",
+    "updated_at": "2025-12-28T12:00:00Z",
+    "sku": {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "description": "Premium white marble from Carrara, Italy. 20mm thickness.",
+      "unit": "SQM",
+      "unit_price": 15000.00,
+      "category": {
+        "code": "A",
+        "name": "High Value",
+        "description": "Premium materials requiring daily/weekly audits",
+        "audit_frequency": "Daily/Weekly"
+      }
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "aisle": "ASL01",
+      "rack": "RK01",
+      "bin": "BN01",
+      "full_code": "WH01-ASL01-RK01-BN01",
+      "zone": "FAST-PICK",
+      "distance_from_dock_meters": 15
+    },
+    "active_allocations": [
+      {
+        "allocation_id": "550e8400-e29b-41d4-a716-446655440050",
+        "quantity": 10,
+        "reference_number": "SO-2025-001",
+        "customer_name": "Oberoi Hotels - Lobby Project",
+        "expires_at": "2025-12-29T12:00:00Z"
+      },
+      {
+        "allocation_id": "550e8400-e29b-41d4-a716-446655440051",
+        "quantity": 10,
+        "reference_number": "SO-2025-002",
+        "customer_name": "DLF Luxury Apartments - Unit 501",
+        "expires_at": "2025-12-29T15:30:00Z"
+      }
+    ],
+    "stock_status": {
+      "is_overstocked": false,
+      "is_understocked": false,
+      "is_at_reorder_level": false,
+      "days_of_supply": 45,
+      "turnover_rate_last_90_days": 3.2
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440041",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440007",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "bin_location_id": "550e8400-e29b-41d4-a716-446655440031",
+    "quantity": 45,
+    "allocated_quantity": 5,
+    "available_quantity": 40,
+    "batch_number": "BATCH-DWT-2025-003",
+    "expiry_date": null,
+    "last_counted_at": "2025-12-28T08:00:00Z",
+    "created_at": "2025-12-22T00:00:00Z",
+    "updated_at": "2025-12-28T11:30:00Z",
+    "sku": {
+      "id": "550e8400-e29b-41d4-a716-446655440007",
+      "sku_code": "DWT-DRL-001",
+      "name": "DeWalt 20V MAX Cordless Drill",
+      "description": "Professional-grade cordless drill with 2-speed transmission.",
+      "unit": "PCS",
+      "unit_price": 8500.00,
+      "category": {
+        "code": "A",
+        "name": "High Value",
+        "description": "Premium materials requiring daily/weekly audits",
+        "audit_frequency": "Daily/Weekly"
+      }
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "aisle": "ASL01",
+      "rack": "RK01",
+      "bin": "BN02",
+      "full_code": "WH01-ASL01-RK01-BN02",
+      "zone": "FAST-PICK",
+      "distance_from_dock_meters": 18
+    },
+    "active_allocations": [
+      {
+        "allocation_id": "550e8400-e29b-41d4-a716-446655440052",
+        "quantity": 5,
+        "reference_number": "SO-2025-003",
+        "customer_name": "Construction Co. - Site Equipment",
+        "expires_at": "2025-12-29T10:00:00Z"
+      }
+    ],
+    "stock_status": {
+      "is_overstocked": false,
+      "is_understocked": true,
+      "is_at_reorder_level": true,
+      "days_of_supply": 12,
+      "turnover_rate_last_90_days": 5.8
+    }
+  }
+]
 ```
 
 **Technical Implementation:** Uses PostgreSQL row-level locking via Supabase transactions to ensure ACID compliance. Two concurrent requests cannot allocate the same stock.
@@ -278,15 +677,202 @@ This API suite addresses the core pain points of Indian AEC material businesses 
 3. Identify slow-moving items (no transactions in 30+ days)
 4. Calculate Inventory Turnover: `Cost of Goods Sold / Average Inventory`
 
+**Example Request:**
+```bash
+GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&limit=10
+```
+
+**Example Response (GET /api/transactions):**
 ```json
-{
-  "type": "RECEIVE",
-  "quantity": 100,
-  "reference_number": "GRN-2025-001",
-  "notes": "Goods received from JSW Steel",
-  "performed_by": "warehouse@insyd.ai",
-  "created_at": "2025-12-28T10:30:00Z"
-}
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440060",
+    "inventory_id": "550e8400-e29b-41d4-a716-446655440040",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440001",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "type": "RECEIVE",
+    "quantity": 100,
+    "reference_number": "GRN-2025-001",
+    "notes": "Goods received from Somany Ceramics. Quality inspection passed. Batch: BATCH-2025-001",
+    "performed_by": "warehouse@insyd.ai",
+    "performed_by_name": "Rajesh Kumar",
+    "created_at": "2025-12-28T10:30:00Z",
+    "sku": {
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "unit": "SQM",
+      "unit_price": 15000.00
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "full_code": "WH01-ASL01-RK01-BN01",
+      "zone": "FAST-PICK"
+    },
+    "transaction_value": 1500000.00,
+    "inventory_snapshot": {
+      "quantity_before": 0,
+      "quantity_after": 100
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440061",
+    "inventory_id": "550e8400-e29b-41d4-a716-446655440040",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440001",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "type": "ALLOCATE",
+    "quantity": 10,
+    "reference_number": "SO-2025-001",
+    "notes": "Soft allocation for Oberoi Hotels - Lobby Project. Pending architect approval.",
+    "performed_by": "sales@insyd.ai",
+    "performed_by_name": "Priya Sharma",
+    "created_at": "2025-12-28T12:00:00Z",
+    "sku": {
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "unit": "SQM",
+      "unit_price": 15000.00
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "full_code": "WH01-ASL01-RK01-BN01",
+      "zone": "FAST-PICK"
+    },
+    "transaction_value": 150000.00,
+    "inventory_snapshot": {
+      "allocated_quantity_before": 0,
+      "allocated_quantity_after": 10,
+      "available_quantity_before": 100,
+      "available_quantity_after": 90
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440062",
+    "inventory_id": "550e8400-e29b-41d4-a716-446655440040",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440001",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "type": "SHIP",
+    "quantity": -30,
+    "reference_number": "DO-2025-005",
+    "notes": "Shipped to DLF Luxury Apartments - Unit 501. Truck: DL-01-AB-1234. Driver: Ramesh Singh.",
+    "performed_by": "warehouse@insyd.ai",
+    "performed_by_name": "Rajesh Kumar",
+    "created_at": "2025-12-28T14:45:00Z",
+    "sku": {
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "unit": "SQM",
+      "unit_price": 15000.00
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "full_code": "WH01-ASL01-RK01-BN01",
+      "zone": "FAST-PICK"
+    },
+    "transaction_value": -450000.00,
+    "inventory_snapshot": {
+      "quantity_before": 100,
+      "quantity_after": 70,
+      "allocated_quantity_before": 30,
+      "allocated_quantity_after": 0
+    },
+    "delivery_details": {
+      "customer_name": "DLF Luxury Apartments",
+      "delivery_address": "Sector 54, Golf Course Road, Gurgaon",
+      "expected_delivery": "2025-12-28T18:00:00Z",
+      "truck_number": "DL-01-AB-1234",
+      "driver_name": "Ramesh Singh",
+      "driver_contact": "+91-98765-11111"
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440063",
+    "inventory_id": "550e8400-e29b-41d4-a716-446655440040",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440001",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "type": "ADJUST",
+    "quantity": -2,
+    "reference_number": "CC-2025-W52",
+    "notes": "Cycle count adjustment. Physical count: 68 units. System count: 70 units. Discrepancy: 2 units damaged (chipped edges).",
+    "performed_by": "warehouse@insyd.ai",
+    "performed_by_name": "Rajesh Kumar",
+    "created_at": "2025-12-28T16:00:00Z",
+    "sku": {
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "unit": "SQM",
+      "unit_price": 15000.00
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "full_code": "WH01-ASL01-RK01-BN01",
+      "zone": "FAST-PICK"
+    },
+    "transaction_value": -30000.00,
+    "inventory_snapshot": {
+      "quantity_before": 70,
+      "quantity_after": 68
+    },
+    "adjustment_reason": "DAMAGE",
+    "approval_required": false,
+    "approved_by": null
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440064",
+    "inventory_id": "550e8400-e29b-41d4-a716-446655440040",
+    "sku_id": "550e8400-e29b-41d4-a716-446655440001",
+    "warehouse_id": "550e8400-e29b-41d4-a716-446655440020",
+    "type": "TRANSFER",
+    "quantity": -20,
+    "reference_number": "TRF-WH01-WH02-001",
+    "notes": "Inter-warehouse transfer from Delhi to Mumbai. Requested by Mumbai manager due to local stockout.",
+    "performed_by": "warehouse@insyd.ai",
+    "performed_by_name": "Rajesh Kumar",
+    "created_at": "2025-12-27T11:00:00Z",
+    "sku": {
+      "sku_code": "MAR-ITL-001",
+      "name": "Italian Carrara Marble",
+      "unit": "SQM",
+      "unit_price": 15000.00
+    },
+    "warehouse": {
+      "code": "WH01",
+      "name": "Delhi Central Warehouse",
+      "city": "Delhi"
+    },
+    "bin_location": {
+      "full_code": "WH01-ASL01-RK01-BN01",
+      "zone": "FAST-PICK"
+    },
+    "transaction_value": -300000.00,
+    "inventory_snapshot": {
+      "quantity_before": 120,
+      "quantity_after": 100
+    },
+    "transfer_details": {
+      "from_warehouse": "WH01",
+      "to_warehouse": "WH02",
+      "to_warehouse_name": "Mumbai Distribution Center",
+      "transfer_status": "IN_TRANSIT",
+      "expected_arrival": "2025-12-29T00:00:00Z"
+    }
+  }
+]
 ```
 
 ---
