@@ -37,3 +37,6 @@ coverage/
 # Misc
 *.log
 .vercel
+
+# Project Documentation (not for GitHub)
+PROJECT_DOCUMENTATION.txt
