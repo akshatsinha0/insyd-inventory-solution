@@ -27,6 +27,38 @@ Indian AEC material businesses face critical challenges:
 - **Phantom Inventory**: Poor SKU granularity causes materials to be "lost" digitally
 - **Black Box Logistics**: No visibility into in-transit inventory
 
+## Inspiration: Stanley Black & Decker and HCLTech Partnership
+
+The design of this inventory solution draws significant inspiration from the strategic partnership between Stanley Black & Decker (SBD) and HCLTech, which represents one of the most successful digital transformation stories in the manufacturing and tools industry.
+
+### How This Partnership Inspired My Solution
+
+When I received the Insyd assignment to solve inventory challenges for AEC material businesses, I researched how global leaders handle similar problems at scale. The SBD and HCLTech collaboration stood out because it addresses the exact same pain points that Indian material businesses face: data latency, fragmented systems, and lack of real time visibility.
+
+Stanley Black & Decker is a Fortune 500 company with over 61,000 employees, managing millions of SKUs across brands like DeWalt, Craftsman, Stanley, Bostitch, and BLACK+DECKER. Their inventory challenges before digital transformation were remarkably similar to what Indian AEC businesses face today: multiple disconnected systems, manual data entry causing errors, and no single source of truth for inventory data.
+
+### Key Learnings Applied to This Solution
+
+**Single Source of Truth Architecture:** In 2020, HCLTech replaced SBD's outdated on premise .NET database with Microsoft Dynamics 365, creating a unified repository for finance and supply chain data. This eliminated duplicate and redundant data that previously hampered financial reporting. I applied this same principle by designing a centralized PostgreSQL database through Supabase, ensuring that whether a user accesses inventory from the warehouse floor, sales office, or management dashboard, they all see the same real time data.
+
+**Offline Mobile Capabilities:** One of HCLTech's most impactful innovations for SBD was enabling distribution trucks to conduct business seamlessly using offline mobile capabilities. Truck operators often work in remote areas with poor connectivity, but they can still process sales, check inventory, and manage warranty data completely offline, with automatic synchronization once connectivity is restored. This directly inspired my decision to build the frontend as a Progressive Web App (PWA) with local caching capabilities, recognizing that Indian warehouses (often large steel structures) frequently have poor internet connectivity.
+
+**ABC Classification at Scale:** SBD's CribMaster platform manages millions of SKUs using ABC Analysis, ensuring high value DeWalt industrial drills get 100% visibility while consumables like Stanley screwdriver sets are replenished automatically. I implemented the same ABC categorization framework, where Category A items (Italian marble, premium tools) require daily audits while Category C items (screws, adhesives) use simple Two Bin visual controls.
+
+**Supply Chain Resilience:** In 2025, SBD faced significant challenges from new tariffs, projecting a gross annualized tariff impact of nearly $800 million. The digital foundation built by HCLTech, providing real time visibility into their $6.8 billion U.S. supply chain spanning China, Mexico, and the U.S., allowed SBD to execute rapid supply shifts and strategic sourcing adjustments. This demonstrated to me the importance of building systems that provide not just current state visibility, but also the agility to respond to market changes. The multi warehouse support and inter warehouse transfer tracking in my solution reflects this learning.
+
+**3 Way Matching for Financial Control:** HCLTech's implementation of Dynamics 365 for SBD included automated matching between purchase orders, goods receipts, and vendor invoices. This prevented payment leakage and ensured vendor accountability. I implemented the same 3 way matching workflow in my procurement module, automatically comparing PO totals, GRN totals, and invoice totals to flag discrepancies before payment is released.
+
+### The Broader Impact
+
+The SBD and HCLTech partnership has delivered measurable results: $1.8 billion in transformation program run rate cost savings by Q2 2025, a 20% reduction in ongoing support costs for their Salesforce ecosystem, and a 15 point increase in service levels through supply chain digitization. Beyond technology, the partnership extended into social responsibility through training hubs at Government Industrial Training Institutes in Pune and Chennai, making 1,000 youth annually job ready for the manufacturing industry.
+
+This holistic approach, combining technology transformation with workforce development, reinforced my belief that inventory management solutions must be designed with the end user in mind. The warehouse floor worker in Okhla should find the system as intuitive as the CFO reviewing dashboards in the corporate office. This is why I prioritized mobile first design, big button navigation, and local language support considerations in my solution architecture.
+
+The SBD and HCLTech story proves that even the most complex, global scale inventory challenges can be solved with the right combination of cloud first architecture, real time data synchronization, and user centric design. My goal was to bring these enterprise grade principles to the Indian AEC sector, scaled appropriately for businesses that may have 3 warehouses instead of 100, but face the same fundamental challenges of data latency, overselling, and supply chain opacity.
+
+---
+
 ## Solution Architecture
 
 ```
@@ -122,7 +154,7 @@ This API suite addresses the core pain points of Indian AEC material businesses 
 
 ---
 
-### 1. SKU Endpoints — The Foundation of Inventory Granularity
+### 1. SKU Endpoints: The Foundation of Inventory Granularity
 
 **Problem Solved:** Indian material businesses often group items under vague categories ("White Marble") instead of specific SKUs, causing phantom inventory where materials exist physically but are "lost" digitally.
 
@@ -274,17 +306,17 @@ GET /api/skus?category=A&search=marble
 
 ---
 
-### 2. Warehouse & Bin Location Endpoints — Eliminating "Tribal Knowledge"
+### 2. Warehouse & Bin Location Endpoints: Eliminating "Tribal Knowledge"
 
 **Problem Solved:** In most Indian MSMEs, only senior warehouse workers know where specific batches are stored. New hires waste hours searching, and materials get "lost" in large warehouses.
 
 **Real-Life Scenario:** A 50,000 sq.ft. warehouse in Okhla stores 500+ SKUs. Without bin mapping, finding a specific batch of 12mm steel rebar takes 30+ minutes of searching.
 
-**The Tribal Knowledge Problem:** In traditional Indian warehouses, the most experienced floor worker becomes the "human database" — only they know that the Italian marble is in the back-left corner, the DeWalt drills are on the second rack near the office, and the cement bags are stacked behind the steel beams. When this person takes leave or leaves the company, operational efficiency collapses. New hires spend their first month just learning locations, and during peak seasons, even experienced staff waste 30-40% of their time searching for materials instead of fulfilling orders. This "search time" directly impacts the Order Fulfillment Cycle Time, a critical KPI for customer satisfaction.
+**The Tribal Knowledge Problem:** In traditional Indian warehouses, the most experienced floor worker becomes the "human database": only they know that the Italian marble is in the back-left corner, the DeWalt drills are on the second rack near the office, and the cement bags are stacked behind the steel beams. When this person takes leave or leaves the company, operational efficiency collapses. New hires spend their first month just learning locations, and during peak seasons, even experienced staff waste 30-40% of their time searching for materials instead of fulfilling orders. This "search time" directly impacts the Order Fulfillment Cycle Time, a critical KPI for customer satisfaction.
 
-**Smart Slotting Strategy:** The API enables "Smart Slotting," a warehouse optimization technique used by logistics giants like Amazon and HCLTech. High-velocity Category A items (Italian marble, premium tools) are assigned to the "FAST-PICK" zone — bins closest to the loading dock to minimize travel distance. Medium-velocity Category B items (ceramic tiles, standard fixtures) go to standard zones, while low-velocity Category C items (bulk consumables) are stored in the "BULK" zone at the warehouse perimeter. The system tracks pick frequency and can recommend bin reassignments quarterly to optimize labor efficiency. For example, if a previously slow-moving SKU suddenly becomes popular due to a design trend, the system flags it for relocation to a faster-pick zone.
+**Smart Slotting Strategy:** The API enables "Smart Slotting," a warehouse optimization technique used by logistics giants like Amazon and HCLTech. High-velocity Category A items (Italian marble, premium tools) are assigned to the "FAST-PICK" zone: bins closest to the loading dock to minimize travel distance. Medium-velocity Category B items (ceramic tiles, standard fixtures) go to standard zones, while low-velocity Category C items (bulk consumables) are stored in the "BULK" zone at the warehouse perimeter. The system tracks pick frequency and can recommend bin reassignments quarterly to optimize labor efficiency. For example, if a previously slow-moving SKU suddenly becomes popular due to a design trend, the system flags it for relocation to a faster-pick zone.
 
-**Multi-Warehouse Coordination:** For businesses operating across multiple cities (Delhi, Mumbai, Bangalore), the API provides unified visibility. A sales executive in Mumbai can instantly check if Delhi warehouse has stock, calculate inter-warehouse transfer costs, and promise accurate delivery dates to customers. This eliminates the common scenario where a customer is told "we'll check and get back to you" — a response that often leads to lost sales in competitive markets.
+**Multi-Warehouse Coordination:** For businesses operating across multiple cities (Delhi, Mumbai, Bangalore), the API provides unified visibility. A sales executive in Mumbai can instantly check if Delhi warehouse has stock, calculate inter-warehouse transfer costs, and promise accurate delivery dates to customers. This eliminates the common scenario where a customer is told "we'll check and get back to you": a response that often leads to lost sales in competitive markets.
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -440,30 +472,30 @@ GET /api/warehouses/550e8400-e29b-41d4-a716-446655440020/bins?zone=FAST-PICK&ava
 
 ---
 
-### 3. Inventory Endpoints — Real-Time Stock Visibility with Atomic Transactions
+### 3. Inventory Endpoints: Real-Time Stock Visibility with Atomic Transactions
 
 **Problem Solved:** Data latency (24-48hr lag) and lack of concurrency control cause overselling. A sales executive in the city office sells 50 units while a walk-in customer at the warehouse buys 10 of the same stock.
 
 **Real-Life Scenario:** A granite dealer's Excel sheet shows 50 slabs available. Sales team closes a ₹7.5L contract for all 50. Meanwhile, a contractor at the depot buys 10 slabs. Result: Inventory deficit, emergency procurement at higher prices, damaged reputation.
 
-**The Overselling Crisis:** This scenario is alarmingly common in Indian material businesses. The root cause is the disconnect between the "digital truth" (what the system says) and the "physical truth" (what's actually in the warehouse). In Excel-based systems, the sales office works off a spreadsheet that was updated yesterday morning. By afternoon, the warehouse has processed 5 walk-in sales, but those transactions haven't been synced back to the sales office. When the sales executive closes a large contract based on stale data, they're essentially selling "phantom inventory" — stock that no longer exists. The business then faces a painful choice: (1) Break the contract and lose the customer's trust, (2) Procure emergency stock at inflated prices (often 15-20% higher), eating into margins, or (3) Delay delivery, risking penalty clauses and negative word-of-mouth in the tight-knit AEC community.
+**The Overselling Crisis:** This scenario is alarmingly common in Indian material businesses. The root cause is the disconnect between the "digital truth" (what the system says) and the "physical truth" (what's actually in the warehouse). In Excel-based systems, the sales office works off a spreadsheet that was updated yesterday morning. By afternoon, the warehouse has processed 5 walk-in sales, but those transactions haven't been synced back to the sales office. When the sales executive closes a large contract based on stale data, they're essentially selling "phantom inventory": stock that no longer exists. The business then faces a painful choice: (1) Break the contract and lose the customer's trust, (2) Procure emergency stock at inflated prices (often 15-20% higher), eating into margins, or (3) Delay delivery, risking penalty clauses and negative word-of-mouth in the tight-knit AEC community.
 
-**Soft Allocation: The Technical Solution:** The `/allocate` endpoint implements what's called "Soft Allocation" or "Reservation" in enterprise inventory systems. When a sales executive creates a quote, the system doesn't immediately deduct stock (that would be "Hard Allocation"), but instead creates a temporary lock. Think of it like booking a movie ticket — the seat is reserved for you for 10 minutes while you complete payment. In inventory terms, the stock is marked as `allocated_quantity`, reducing the `available_quantity` for other transactions. If the sale closes, the allocation converts to a shipment. If the customer doesn't confirm within 24 hours, the allocation expires and stock becomes available again. This prevents the "double-booking" problem while maintaining flexibility for sales negotiations.
+**Soft Allocation: The Technical Solution:** The `/allocate` endpoint implements what's called "Soft Allocation" or "Reservation" in enterprise inventory systems. When a sales executive creates a quote, the system doesn't immediately deduct stock (that would be "Hard Allocation"), but instead creates a temporary lock. Think of it like booking a movie ticket: the seat is reserved for you for 10 minutes while you complete payment. In inventory terms, the stock is marked as `allocated_quantity`, reducing the `available_quantity` for other transactions. If the sale closes, the allocation converts to a shipment. If the customer doesn't confirm within 24 hours, the allocation expires and stock becomes available again. This prevents the "double-booking" problem while maintaining flexibility for sales negotiations.
 
-**ACID Compliance via PostgreSQL:** The technical implementation uses PostgreSQL's row-level locking mechanism through Supabase. When two users try to allocate the same stock simultaneously, the database ensures only one transaction succeeds (Atomicity). The inventory record is locked during the allocation operation, preventing race conditions (Consistency). Even if the server crashes mid-transaction, the database either completes the allocation fully or rolls back entirely (Durability). This is the same transactional integrity used by banking systems to prevent double-spending — critical for high-value AEC materials where a single error can cost lakhs of rupees.
+**ACID Compliance via PostgreSQL:** The technical implementation uses PostgreSQL's row-level locking mechanism through Supabase. When two users try to allocate the same stock simultaneously, the database ensures only one transaction succeeds (Atomicity). The inventory record is locked during the allocation operation, preventing race conditions (Consistency). Even if the server crashes mid-transaction, the database either completes the allocation fully or rolls back entirely (Durability). This is the same transactional integrity used by banking systems to prevent double-spending: critical for high-value AEC materials where a single error can cost lakhs of rupees.
 
-**Real-Time Sync Across Channels:** The API enables true omnichannel inventory visibility. Whether a customer is browsing the website, calling the sales office, or standing at the warehouse counter, everyone sees the same real-time stock levels. This is particularly important for businesses transitioning to e-commerce — customers expect "Add to Cart" to guarantee availability, not just be a wishlist. The system updates inventory within milliseconds of any transaction, eliminating the 24-48 hour lag that plagues traditional systems.
+**Real-Time Sync Across Channels:** The API enables true omnichannel inventory visibility. Whether a customer is browsing the website, calling the sales office, or standing at the warehouse counter, everyone sees the same real-time stock levels. This is particularly important for businesses transitioning to e-commerce: customers expect "Add to Cart" to guarantee availability, not just be a wishlist. The system updates inventory within milliseconds of any transaction, eliminating the 24-48 hour lag that plagues traditional systems.
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
 | GET | `/api/inventory` | Real-time stock levels across all warehouses |
-| POST | `/api/inventory/:id/allocate` | **Soft Allocation** — Atomic lock preventing overselling |
+| POST | `/api/inventory/:id/allocate` | **Soft Allocation**: Atomic lock preventing overselling |
 | POST | `/api/inventory/:id/receive` | Record goods receipt with batch tracking |
 | PUT | `/api/inventory/:id` | Adjust quantities (cycle count corrections) |
 
 **Soft Allocation Workflow (Prevents Overselling):**
 1. Sales executive creates quote for 50 units
-2. System performs `POST /allocate` — creates atomic lock on those 50 units
+2. System performs `POST /allocate`: creates atomic lock on those 50 units
 3. `allocated_quantity` increases, `available_quantity` decreases
 4. Walk-in customer sees only 40 available (50 total - 10 allocated)
 5. If sale doesn't close in 24hrs, allocation auto-expires
@@ -644,7 +676,7 @@ GET /api/warehouses/550e8400-e29b-41d4-a716-446655440020/bins?zone=FAST-PICK&ava
 
 ---
 
-### 4. Transaction Endpoints — Complete Audit Trail for Compliance
+### 4. Transaction Endpoints: Complete Audit Trail for Compliance
 
 **Problem Solved:** Without transaction logs, businesses can't identify shrinkage sources, perform cycle counts, or calculate accurate Inventory Turnover Ratios.
 
@@ -652,9 +684,9 @@ GET /api/warehouses/550e8400-e29b-41d4-a716-446655440020/bins?zone=FAST-PICK&ava
 
 **The Shrinkage Mystery:** Inventory shrinkage is the silent profit killer in material businesses. Industry benchmarks suggest 2-3% shrinkage is "normal," but many Indian businesses experience 5-8% without realizing it because they only discover discrepancies during annual physical counts. By then, it's too late to investigate. Shrinkage has multiple causes: (1) Theft (internal or external), (2) Damage during handling (broken tiles, scratched marble), (3) Data entry errors (receiving 90 units but recording 100), (4) Measurement errors (cement bags losing weight due to moisture), and (5) Unrecorded consumption (using materials for internal repairs without logging). Without transaction-level tracking, management can't distinguish between these causes, making it impossible to implement targeted solutions.
 
-**Audit Trail for Accountability:** Every single inventory movement — whether it's receiving 100 marble slabs from a vendor, allocating 20 for a customer order, shipping 15 to a project site, or adjusting 2 units due to damage — creates an immutable transaction record. Each record captures: WHO performed the action (user email), WHAT happened (transaction type), WHEN it occurred (timestamp), HOW MUCH was moved (quantity with +/- sign), and WHY (reference number linking to PO/SO/GRN). This creates a complete chain of custody for every unit of inventory. If a discrepancy is discovered during a cycle count (physical count shows 95 units but system shows 100), the audit trail allows managers to trace back through every transaction to identify where the 5-unit gap originated.
+**Audit Trail for Accountability:** Every single inventory movement: whether it's receiving 100 marble slabs from a vendor, allocating 20 for a customer order, shipping 15 to a project site, or adjusting 2 units due to damage: creates an immutable transaction record. Each record captures: WHO performed the action (user email), WHAT happened (transaction type), WHEN it occurred (timestamp), HOW MUCH was moved (quantity with +/- sign), and WHY (reference number linking to PO/SO/GRN). This creates a complete chain of custody for every unit of inventory. If a discrepancy is discovered during a cycle count (physical count shows 95 units but system shows 100), the audit trail allows managers to trace back through every transaction to identify where the 5-unit gap originated.
 
-**Cycle Counting vs. Annual Physical Counts:** Traditional businesses shut down operations once a year for a full physical inventory count — a painful, expensive process that disrupts sales for 2-3 days. Modern inventory management uses "Cycle Counting" instead: counting a small subset of SKUs every day. Category A items (high-value) are counted weekly, Category B monthly, Category C quarterly. The transaction log makes this possible by highlighting SKUs with suspicious patterns (e.g., frequent adjustments, large one-time movements) for priority counting. Over a year, every SKU gets counted multiple times, but without the operational disruption of a full shutdown.
+**Cycle Counting vs. Annual Physical Counts:** Traditional businesses shut down operations once a year for a full physical inventory count: a painful, expensive process that disrupts sales for 2-3 days. Modern inventory management uses "Cycle Counting" instead: counting a small subset of SKUs every day. Category A items (high-value) are counted weekly, Category B monthly, Category C quarterly. The transaction log makes this possible by highlighting SKUs with suspicious patterns (e.g., frequent adjustments, large one-time movements) for priority counting. Over a year, every SKU gets counted multiple times, but without the operational disruption of a full shutdown.
 
 **Inventory Turnover Analysis:** The transaction log enables calculation of Inventory Turnover Ratio (Cost of Goods Sold ÷ Average Inventory Value), a critical metric for working capital efficiency. A low turnover ratio (e.g., 2x annually) indicates dead stock tying up capital. The API can filter transactions by SKU to identify slow-movers: items with no SHIP transactions in 60+ days. Management can then decide to liquidate these items at a discount, freeing up cash and warehouse space for faster-moving products. This is particularly important for seasonal materials (e.g., monsoon-specific waterproofing products) that need to be cleared before demand drops.
 
@@ -664,12 +696,12 @@ GET /api/warehouses/550e8400-e29b-41d4-a716-446655440020/bins?zone=FAST-PICK&ava
 | POST | `/api/transactions` | Manual adjustments (damage, returns) |
 
 **Transaction Types:**
-- `RECEIVE` — Goods received from vendor (green badge)
-- `ALLOCATE` — Stock reserved for sales order (blue badge)
-- `SHIP` — Goods dispatched to customer (orange badge)
-- `ADJUST` — Cycle count corrections (purple badge)
-- `TRANSFER` — Inter-warehouse movement
-- `RETURN` — Customer returns
+- `RECEIVE`: Goods received from vendor (green badge)
+- `ALLOCATE`: Stock reserved for sales order (blue badge)
+- `SHIP`: Goods dispatched to customer (orange badge)
+- `ADJUST`: Cycle count corrections (purple badge)
+- `TRANSFER`: Inter-warehouse movement
+- `RETURN`: Customer returns
 
 **Workflow:**
 1. Every inventory movement auto-logs a transaction
@@ -877,19 +909,19 @@ GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&l
 
 ---
 
-### 5. Shipment Endpoints — Eliminating the "Black Box" of In-Transit Inventory
+### 5. Shipment Endpoints: Eliminating the "Black Box" of In-Transit Inventory
 
 **Problem Solved:** The gap between vendor dispatch and warehouse receipt is a "black box." Fragmented communication (WhatsApp/phone calls) causes loading dock bottlenecks and stockout panics.
 
-**Real-Life Scenario:** A construction project needs 500 bags of cement by Monday. The vendor dispatched Friday, but the warehouse manager has no visibility. Truck arrives Monday at 5 PM — project delayed.
+**Real-Life Scenario:** A construction project needs 500 bags of cement by Monday. The vendor dispatched Friday, but the warehouse manager has no visibility. Truck arrives Monday at 5 PM: project delayed.
 
 **The In-Transit Black Box:** In traditional Indian supply chains, once a vendor dispatches goods, they enter a "black box" until they physically arrive at the warehouse. The procurement team knows goods were dispatched (vendor sent a WhatsApp message with a truck photo), but they don't know: (1) Current location of the shipment, (2) Expected arrival time (traffic, route changes), (3) Whether the shipment is intact (accidents, theft), or (4) If multiple shipments will arrive simultaneously (causing loading dock congestion). This lack of visibility creates two major problems: **Stockout Panics** where production/projects halt because materials are "somewhere in transit" but not available for use, and **Loading Dock Bottlenecks** where 3 trucks arrive simultaneously but the warehouse only has capacity to unload one at a time, leading to demurrage charges and vendor disputes.
 
-**ASN (Advanced Shipping Notice): The Early Warning System:** The ASN is borrowed from automotive and retail supply chains where just-in-time delivery is critical. When a vendor dispatches goods, they create an ASN in the system specifying: SKU details, quantity, tracking number, expected arrival date, and truck/driver details. This ASN serves multiple purposes: (1) It gives the warehouse manager 24-48 hours advance notice to prepare — clearing floor space, arranging labor for unloading, and scheduling quality inspections, (2) It flags inventory as "In-Transit" so sales teams know stock is coming but not yet available for immediate sale, and (3) It creates a digital paper trail linking the eventual GRN (Goods Received Note) back to the original PO (Purchase Order), enabling the 3-way matching process.
+**ASN (Advanced Shipping Notice): The Early Warning System:** The ASN is borrowed from automotive and retail supply chains where just-in-time delivery is critical. When a vendor dispatches goods, they create an ASN in the system specifying: SKU details, quantity, tracking number, expected arrival date, and truck/driver details. This ASN serves multiple purposes: (1) It gives the warehouse manager 24-48 hours advance notice to prepare: clearing floor space, arranging labor for unloading, and scheduling quality inspections, (2) It flags inventory as "In-Transit" so sales teams know stock is coming but not yet available for immediate sale, and (3) It creates a digital paper trail linking the eventual GRN (Goods Received Note) back to the original PO (Purchase Order), enabling the 3-way matching process.
 
 **Webhook Integration with 3PL Providers:** Modern logistics providers (Delhivery, BlueDart, Porter) offer webhook APIs that push real-time status updates. Instead of the warehouse manager calling the vendor every 2 hours asking "where's my shipment?", the 3PL provider automatically sends updates at each checkpoint: DISPATCHED (left vendor facility), IN_TRANSIT (on highway), OUT_FOR_DELIVERY (within city limits), DELIVERED (signed by warehouse). Each webhook call includes GPS coordinates and timestamp, enabling precise ETA calculations. When the status changes to DELIVERED, the system automatically: (1) Updates inventory quantity, (2) Logs a RECEIVE transaction, (3) Removes the shipment from the in-transit dashboard, and (4) Triggers the GRN creation workflow for quality verification.
 
-**In-Transit Inventory Valuation:** For businesses with long supply chains (e.g., importing Italian marble with 30-day shipping times), in-transit inventory represents significant working capital. The `/in-transit` endpoint provides a dashboard showing total value of goods currently in transit — critical for CFOs managing cash flow. If ₹50L worth of materials are in transit, that's capital tied up that can't be used for other purposes. This visibility helps in negotiating payment terms with vendors (e.g., payment on delivery vs. payment on dispatch) and planning credit line utilization with banks.
+**In-Transit Inventory Valuation:** For businesses with long supply chains (e.g., importing Italian marble with 30-day shipping times), in-transit inventory represents significant working capital. The `/in-transit` endpoint provides a dashboard showing total value of goods currently in transit: critical for CFOs managing cash flow. If ₹50L worth of materials are in transit, that's capital tied up that can't be used for other purposes. This visibility helps in negotiating payment terms with vendors (e.g., payment on delivery vs. payment on dispatch) and planning credit line utilization with banks.
 
 **Preventing Loading Dock Chaos:** By knowing exactly when each shipment will arrive, warehouse managers can schedule unloading slots, preventing the common scenario where 3 trucks arrive at 9 AM but only one dock is available. This scheduling reduces truck waiting time (demurrage charges), improves labor utilization (workers aren't idle then suddenly overwhelmed), and ensures quality checks aren't rushed due to pressure from waiting trucks.
 
@@ -897,7 +929,7 @@ GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&l
 |--------|----------|---------|
 | GET | `/api/shipments` | List all shipments with status |
 | POST | `/api/shipments` | Create ASN (Advanced Shipping Notice) |
-| POST | `/api/shipments/webhook` | **Webhook** — 3PL providers push status updates |
+| POST | `/api/shipments/webhook` | **Webhook**: 3PL providers push status updates |
 | GET | `/api/shipments/in-transit` | Dashboard summary of in-transit value |
 
 **ASN (Advanced Shipping Notice) Workflow:**
@@ -923,7 +955,7 @@ GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&l
 // 3. Clears shipment from in-transit dashboard
 ```
 
-**In-Transit Summary:** Shows total value of goods in transit — critical for working capital planning.
+**In-Transit Summary:** Shows total value of goods in transit: critical for working capital planning.
 
 ```json
 {
@@ -935,15 +967,15 @@ GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&l
 
 ---
 
-### 6. Procurement Endpoints — 3-Way Matching for Financial Integrity
+### 6. Procurement Endpoints: 3-Way Matching for Financial Integrity
 
 **Problem Solved:** Without systematic verification, vendor errors (short-shipping, overbilling) go undetected. Finance pays invoices without confirming goods were actually received.
 
-**Real-Life Scenario:** Vendor invoices for 100 units at ₹500 each (₹50,000). Warehouse received only 90 units. Without 3-way matching, finance pays full amount — ₹5,000 loss.
+**Real-Life Scenario:** Vendor invoices for 100 units at ₹500 each (₹50,000). Warehouse received only 90 units. Without 3-way matching, finance pays full amount: ₹5,000 loss.
 
 **The Payment Leakage Problem:** In traditional procurement workflows, there's a dangerous disconnect between three departments: (1) Procurement creates Purchase Orders, (2) Warehouse receives goods and creates GRNs, and (3) Finance processes vendor invoices for payment. Each department works in silos, often using different systems (Excel, email, paper ledgers). This creates opportunities for errors and fraud: vendors can invoice for quantities not delivered (short-shipping), charge prices higher than agreed in the PO (price manipulation), or bill for goods that were rejected due to quality issues. Industry studies suggest 2-5% of procurement spend is lost to such discrepancies in businesses without systematic verification. For a business with ₹10 crore annual procurement, that's ₹20-50 lakh in preventable losses.
 
-**The 3-Way Match: Financial Control Mechanism:** The 3-way match is a fundamental internal control used by Fortune 500 companies and mandated by Sarbanes-Oxley compliance in the US. It works by automatically comparing three independent documents: (1) **Purchase Order (PO)** — What we ordered and agreed to pay, (2) **Goods Received Note (GRN)** — What we actually received and accepted, and (3) **Vendor Invoice** — What the vendor is charging us. The system flags any discrepancies: quantity variance (ordered 100, received 90, invoiced 100), price variance (PO says ₹500/unit, invoice says ₹550/unit), or total amount variance. Only invoices that match perfectly (or within a tolerance threshold like ₹0.01) are auto-approved for payment. Discrepant invoices are routed to a manager for investigation before payment is released.
+**The 3-Way Match: Financial Control Mechanism:** The 3-way match is a fundamental internal control used by Fortune 500 companies and mandated by Sarbanes-Oxley compliance in the US. It works by automatically comparing three independent documents: (1) **Purchase Order (PO)**: What we ordered and agreed to pay, (2) **Goods Received Note (GRN)**: What we actually received and accepted, and (3) **Vendor Invoice**: What the vendor is charging us. The system flags any discrepancies: quantity variance (ordered 100, received 90, invoiced 100), price variance (PO says ₹500/unit, invoice says ₹550/unit), or total amount variance. Only invoices that match perfectly (or within a tolerance threshold like ₹0.01) are auto-approved for payment. Discrepant invoices are routed to a manager for investigation before payment is released.
 
 **Real-World Scenario Breakdown:** Let's walk through a complete procurement cycle for 100 units of steel rebar from JSW Steel at ₹6,500/unit (₹6,50,000 total):
 
@@ -1039,7 +1071,7 @@ GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&l
    - **GRN Total:** What we received (₹5,85,000 for 90 units)
    - **Invoice Total:** What vendor is charging (₹6,50,000)
 4. Variance detected: ₹65,000 discrepancy
-5. Status: `DISCREPANCY` — requires investigation before payment
+5. Status: `DISCREPANCY`: requires investigation before payment
 
 ```json
 {
@@ -1056,7 +1088,7 @@ GET /api/transactions?sku_id=550e8400-e29b-41d4-a716-446655440001&type=RECEIVE&l
 
 ---
 
-### 7. Authentication Endpoints — Secure Access Control
+### 7. Authentication Endpoints: Secure Access Control
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -1126,3 +1158,4 @@ Akshat Sinha - [GitHub](https://github.com/akshatsinha0)
 ---
 
 *Built for Insyd SDE Intern Assignment - December 2025*
+
