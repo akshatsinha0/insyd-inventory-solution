@@ -2,8 +2,9 @@
  * 1.) Sidebar Navigation Component.
  * 2.) Rendered tab buttons for main views.
  * 3.) Highlighted active tab state.
+ * 4.) Displayed user authentication status.
  */
-export default function Sidebar({ activeTab, setActiveTab }) {
+export default function Sidebar({ activeTab, setActiveTab, user, onAuthClick, onLogout }) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'inventory', label: 'Inventory' },
@@ -35,6 +36,28 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           </button>
         ))}
       </nav>
+      
+      {/* User Section */}
+      <div className="p-4 border-t border-gray-200">
+        {user ? (
+          <div>
+            <p className="text-sm font-medium text-gray-700 truncate">{user.name || user.email}</p>
+            <button 
+              onClick={onLogout}
+              className="text-xs text-gray-500 mt-1"
+            >
+              Sign Out
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={onAuthClick}
+            className="w-full px-3 py-2 text-sm bg-gray-100 text-gray-700"
+          >
+            Sign In
+          </button>
+        )}
+      </div>
       
       <div className="p-4 border-t border-gray-200 text-xs text-gray-400">
         v1.0.0

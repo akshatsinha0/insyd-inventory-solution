@@ -17,6 +17,7 @@ const shipmentRoutes = require('./routes/shipments');
 const purchaseOrderRoutes = require('./routes/purchaseOrders');
 const grnRoutes = require('./routes/grns');
 const invoiceRoutes = require('./routes/invoices');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -34,6 +35,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/warehouses', warehouseRoutes);

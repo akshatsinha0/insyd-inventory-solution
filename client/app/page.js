@@ -2,7 +2,7 @@
  * 1.) Main Application Page.
  * 2.) Managed global state for inventory and transactions.
  * 3.) Rendered tab-based navigation between views.
- * 4.) Integrated stock alert notifications.
+ * 4.) Integrated authentication and stock alert notifications.
  */
 'use client'
 
@@ -16,6 +16,7 @@ import Scanner from '../components/Scanner'
 import Shipments from '../components/Shipments'
 import StockAlert from '../components/StockAlert'
 import OnboardingTour from '../components/OnboardingTour'
+import AuthModal from '../components/AuthModal'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -24,10 +25,16 @@ export default function Home() {
   const [warehouses, setWarehouses] = useState([])
   const [loading, setLoading] = useState(true)
   const [showTour, setShowTour] = useState(true)
+  const [user, setUser] = useState(null)
+  const [showAuth, setShowAuth] = useState(false)
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'
 
   useEffect(() => {
+    const savedUser = localStorage.getItem('insyd_user')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
     fetchData()
   }, [])
 
@@ -70,7 +77,17 @@ export default function Home() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        user={user}
+        onAuthClick={() => setShowAuth(true)}
+        onLogout={() => {
+          localStorage.removeItem('insyd_user')
+          localStorage.removeItem('insyd_token')
+          setUser(null)
+        }}
+      />
       <main className="flex-1 overflow-auto p-6">
         {loading ? (
           <div className="flex items-center justify-center h-full">
@@ -87,6 +104,12 @@ export default function Home() {
         <OnboardingTour 
           onComplete={() => setShowTour(false)} 
           setActiveTab={setActiveTab}
+        />
+      )}
+      {showAuth && (
+        <AuthModal 
+          onClose={() => setShowAuth(false)}
+          onAuth={(userData) => setUser(userData)}
         />
       )}
     </div>

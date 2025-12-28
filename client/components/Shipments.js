@@ -2,11 +2,12 @@
  * 1.) Shipments Component for 3PL Tracking.
  * 2.) Displayed in-transit inventory from vendors.
  * 3.) Simulated webhook status updates.
- * 4.) Showed expected arrival and current location.
+ * 4.) Used floating label inputs for ASN creation.
  */
 'use client'
 
 import { useState, useEffect } from 'react'
+import FloatingInput from './FloatingInput'
 
 export default function Shipments() {
   const [shipments, setShipments] = useState([])
@@ -205,72 +206,43 @@ export default function Shipments() {
           <div className="bg-white p-6 w-96 border border-gray-200">
             <h3 className="text-lg font-medium mb-4">Create Advanced Shipping Notice</h3>
             
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-gray-500">SKU</label>
-                <select
-                  value={formData.sku_id}
-                  onChange={(e) => setFormData({...formData, sku_id: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 text-sm"
-                >
-                  <option value="">Select SKU</option>
-                  {skus.map(sku => (
-                    <option key={sku.id} value={sku.id}>{sku.sku_code} - {sku.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs text-gray-500">Destination Warehouse</label>
-                <select
-                  value={formData.warehouse_id}
-                  onChange={(e) => setFormData({...formData, warehouse_id: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 text-sm"
-                >
-                  <option value="">Select Warehouse</option>
-                  {warehouses.map(wh => (
-                    <option key={wh.id} value={wh.id}>{wh.code} - {wh.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs text-gray-500">Quantity</label>
-                <input
-                  type="number"
-                  value={formData.quantity}
-                  onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 text-sm"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500">Vendor Name</label>
-                <input
-                  type="text"
-                  value={formData.vendor_name}
-                  onChange={(e) => setFormData({...formData, vendor_name: e.target.value})}
-                  placeholder="e.g., JSW Steel, Somany Ceramics"
-                  className="w-full px-3 py-2 border border-gray-300 text-sm"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500">Tracking Number</label>
-                <input
-                  type="text"
-                  value={formData.tracking_number}
-                  onChange={(e) => setFormData({...formData, tracking_number: e.target.value})}
-                  placeholder="e.g., DEL-2025-001"
-                  className="w-full px-3 py-2 border border-gray-300 text-sm"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500">Expected Arrival</label>
-                <input
-                  type="date"
-                  value={formData.expected_arrival}
-                  onChange={(e) => setFormData({...formData, expected_arrival: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 text-sm"
-                />
-              </div>
-            </div>
+            <FloatingInput
+              label="SKU"
+              value={formData.sku_id}
+              onChange={(e) => setFormData({...formData, sku_id: e.target.value})}
+              options={skus.map(s => ({ value: s.id, label: `${s.sku_code} - ${s.name}` }))}
+            />
+            <FloatingInput
+              label="Destination Warehouse"
+              value={formData.warehouse_id}
+              onChange={(e) => setFormData({...formData, warehouse_id: e.target.value})}
+              options={warehouses.map(w => ({ value: w.id, label: `${w.code} - ${w.name}` }))}
+            />
+            <FloatingInput
+              label="Quantity"
+              type="number"
+              value={formData.quantity}
+              onChange={(e) => setFormData({...formData, quantity: e.target.value})}
+              placeholder="e.g., 100"
+            />
+            <FloatingInput
+              label="Vendor Name"
+              value={formData.vendor_name}
+              onChange={(e) => setFormData({...formData, vendor_name: e.target.value})}
+              placeholder="e.g., JSW Steel, Somany Ceramics"
+            />
+            <FloatingInput
+              label="Tracking Number"
+              value={formData.tracking_number}
+              onChange={(e) => setFormData({...formData, tracking_number: e.target.value})}
+              placeholder="e.g., DEL-2025-001"
+            />
+            <FloatingInput
+              label="Expected Arrival"
+              type="date"
+              value={formData.expected_arrival}
+              onChange={(e) => setFormData({...formData, expected_arrival: e.target.value})}
+            />
             
             <div className="flex gap-2 mt-6">
               <button
