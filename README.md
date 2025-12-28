@@ -111,7 +111,7 @@ insyd-inventory-solution/
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
 - Supabase account
 
