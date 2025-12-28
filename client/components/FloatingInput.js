@@ -2,7 +2,7 @@
  * 1.) Floating Label Input Component.
  * 2.) Animated placeholder slides below input on focus.
  * 3.) Supported text, number, date, and select inputs.
- * 4.) Provided visual hint to users while typing.
+ * 4.) Password fields use static placeholder to prevent overlap.
  */
 'use client'
 
@@ -21,6 +21,12 @@ export default function FloatingInput({
   const [focused, setFocused] = useState(false)
   const hasValue = value && value.toString().length > 0
   const isActive = focused || hasValue
+  
+  /*
+   * 1.) Password fields use static placeholder inside input.
+   * 2.) Prevents text overlap with password visibility toggle.
+   */
+  const isPasswordField = type === 'password' || type === 'text' && placeholder?.includes('••')
 
   /*
    * 1.) Render select dropdown if options provided.
@@ -57,9 +63,10 @@ export default function FloatingInput({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         required={required}
+        placeholder={isPasswordField ? placeholder : ''}
         className="w-full px-3 py-2.5 border border-gray-300 text-sm focus:outline-none focus:border-gray-500"
       />
-      {placeholder && (
+      {placeholder && !isPasswordField && (
         <span 
           className={`absolute left-3 transition-all duration-300 pointer-events-none ${
             isActive 

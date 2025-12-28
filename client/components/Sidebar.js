@@ -17,7 +17,7 @@ export default function Sidebar({ activeTab, setActiveTab, user, onAuthClick, on
   return (
     <aside className="w-56 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-200">
-        <h1 className="text-lg font-semibold text-gray-900">Insyd Inventory</h1>
+        <h1 className="text-lg font-semibold text-gray-900">Task: Insyd Prototype Inventory</h1>
         <p className="text-xs text-gray-500">AEC Material Management</p>
       </div>
       
