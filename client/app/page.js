@@ -9,14 +9,14 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../components/Sidebar'
 import Dashboard from '../components/Dashboard'
-import InventoryList from '../components/InventoryList'
+import InventoryList from '../components/Inventory'
 import Procurement from '../components/Procurement'
 import Transactions from '../components/Transactions'
 import Scanner from '../components/Scanner'
 import Shipments from '../components/Shipments'
 import StockAlert from '../components/StockAlert'
 import OnboardingTour from '../components/OnboardingTour'
-import AuthModal from '../components/AuthModal'
+import AuthModal from '../components/Auth'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard')
