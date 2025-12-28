@@ -101,3 +101,71 @@ button, input, select {
   animation: floatDelayed 5s ease-in-out infinite;
   animation-delay: 1s;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+  
+  table {
+    font-size: 0.75rem;
+  }
+  
+  th, td {
+    padding: 0.5rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-xl {
+    font-size: 1.125rem !important;
+  }
+  
+  .p-6 {
+    padding: 1rem !important;
+  }
+  
+  .w-96 {
+    width: 90vw !important;
+    max-width: 400px;
+  }
+  
+  .w-\[600px\] {
+    width: 90vw !important;
+    max-width: 600px;
+  }
+  
+  aside {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+  
+  .hidden-mobile {
+    display: none !important;
+  }
+  
+  .overflow-x-auto {
+    overflow-x: scroll;
+  }
+  
+  table {
+    min-width: 600px;
+  }
+}
