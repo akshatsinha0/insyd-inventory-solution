@@ -1,20 +1,30 @@
 /*
- * 1.) Procurement Main Component for 3-Way Matching.
- * 2.) Managed POs, GRNs, Invoices, and match results.
+ * 1.) Main Procurement Component for 3-Way Matching.
+ * 2.) Orchestrated PO, GRN, Invoice, and Match workflows.
+ * 3.) Delegated view rendering to specialized components.
  */
 'use client'
 
 import { useState, useEffect } from 'react'
-import ProcurementTabs from './ProcurementTabs'
-import POView from './POView'
-import GRNView from './GRNView'
-import InvoiceView from './InvoiceView'
+import TabNavigation from './TabNavigation'
+import PurchaseOrdersView from './PurchaseOrdersView'
+import GRNsView from './GRNsView'
+import InvoicesView from './InvoicesView'
 import MatchesView from './MatchesView'
 import { useProcurementData } from './useProcurementData'
 
 export default function Procurement() {
   const [activeView, setActiveView] = useState('pos')
-  const { data, loading, fetchData } = useProcurementData(activeView)
+  const {
+    pos,
+    grns,
+    invoices,
+    matches,
+    skus,
+    warehouses,
+    loading,
+    fetchData
+  } = useProcurementData(activeView)
 
   useEffect(() => {
     fetchData()
@@ -28,12 +38,34 @@ export default function Procurement() {
         <h2 className="text-xl font-semibold">Procurement & 3-Way Matching</h2>
       </div>
 
-      <ProcurementTabs activeView={activeView} setActiveView={setActiveView} />
+      <TabNavigation activeView={activeView} setActiveView={setActiveView} />
 
-      {activeView === 'pos' && <POView data={data} onRefresh={fetchData} />}
-      {activeView === 'grns' && <GRNView data={data} onRefresh={fetchData} />}
-      {activeView === 'invoices' && <InvoiceView data={data} onRefresh={fetchData} />}
-      {activeView === 'matches' && <MatchesView data={data} />}
+      {activeView === 'pos' && (
+        <PurchaseOrdersView 
+          pos={pos} 
+          skus={skus} 
+          warehouses={warehouses} 
+          onRefresh={fetchData} 
+        />
+      )}
+
+      {activeView === 'grns' && (
+        <GRNsView 
+          grns={grns} 
+          pos={pos} 
+          skus={skus} 
+          warehouses={warehouses} 
+          onRefresh={fetchData} 
+        />
+      )}
+
+      {activeView === 'invoices' && (
+        <InvoicesView invoices={invoices} />
+      )}
+
+      {activeView === 'matches' && (
+        <MatchesView matches={matches} />
+      )}
     </div>
   )
 }
