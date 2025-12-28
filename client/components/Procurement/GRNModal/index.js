@@ -6,7 +6,8 @@
 'use client'
 
 import { useState } from 'react'
-import FloatingInput from '../FloatingInput'
+import FloatingInput from '../../FloatingInput'
+import GRNLineItems from './GRNLineItems'
 
 export default function GRNModal({ pos, skus, onClose, onCreate }) {
   const [grnForm, setGRNForm] = useState({
@@ -68,40 +69,11 @@ export default function GRNModal({ pos, skus, onClose, onCreate }) {
           />
         </div>
 
-        {grnForm.line_items.length > 0 && (
-          <div className="mt-4">
-            <h4 className="text-sm font-medium mb-2">Items to Receive</h4>
-            {grnForm.line_items.map((item, idx) => {
-              const sku = skus.find(s => s.id === item.sku_id)
-              return (
-                <div key={idx} className="grid grid-cols-4 gap-2 mb-2 items-center">
-                  <span className="text-sm">{sku?.sku_code || 'Unknown'}</span>
-                  <input
-                    type="number"
-                    value={item.quantity_received}
-                    onChange={(e) => updateLineItem(idx, 'quantity_received', e.target.value)}
-                    placeholder="Qty Received"
-                    className="px-2 py-2 border border-gray-300 text-sm"
-                  />
-                  <input
-                    type="number"
-                    value={item.quantity_rejected}
-                    onChange={(e) => updateLineItem(idx, 'quantity_rejected', e.target.value)}
-                    placeholder="Rejected"
-                    className="px-2 py-2 border border-gray-300 text-sm"
-                  />
-                  <input
-                    type="text"
-                    value={item.batch_number}
-                    onChange={(e) => updateLineItem(idx, 'batch_number', e.target.value)}
-                    placeholder="e.g., BATCH-2025-001"
-                    className="px-2 py-2 border border-gray-300 text-sm"
-                  />
-                </div>
-              )
-            })}
-          </div>
-        )}
+        <GRNLineItems 
+          lineItems={grnForm.line_items}
+          skus={skus}
+          onUpdateLineItem={updateLineItem}
+        />
 
         <FloatingInput
           label="Notes"
