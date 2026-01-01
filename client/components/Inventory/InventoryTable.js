@@ -10,7 +10,6 @@ export default function InventoryTable({ inventory, onAllocate }) {
   }
 
   return (
-    <div className="bg-white border border-gray-200">
       <table className="w-full text-sm">
         <thead className="bg-gray-50">
           <tr className="text-left text-xs text-gray-500 uppercase">
@@ -56,6 +55,5 @@ export default function InventoryTable({ inventory, onAllocate }) {
           ))}
         </tbody>
       </table>
-    </div>
   )
 }

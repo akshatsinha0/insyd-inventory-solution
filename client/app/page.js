@@ -76,30 +76,44 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-      <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        user={user}
-        onAuthClick={() => setShowAuth(true)}
-        onLogout={() => {
-          localStorage.removeItem('insyd_user')
-          localStorage.removeItem('insyd_token')
-          setUser(null)
-        }}
-      />
-      <main className="flex-1 overflow-auto p-4 md:p-6">
-        {loading ? (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500">Loading...</p>
-          </div>
-        ) : (
-          <>
-            <StockAlert inventory={inventory} />
-            {renderContent()}
-          </>
-        )}
-      </main>
+    <div className="flex flex-col h-screen">
+      {/* Top Header Bar */}
+      <header className="bg-gray-800 text-white px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-semibold">Insyd Inventory System</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-300">AEC Material Management</span>
+        </div>
+      </header>
+
+      {/* Main Layout with Sidebar and Content */}
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          user={user}
+          onAuthClick={() => setShowAuth(true)}
+          onLogout={() => {
+            localStorage.removeItem('insyd_user')
+            localStorage.removeItem('insyd_token')
+            setUser(null)
+          }}
+        />
+        <main className="flex-1 overflow-auto p-4 md:p-8 bg-gray-50">
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-500">Loading...</p>
+            </div>
+          ) : (
+            <>
+              <StockAlert inventory={inventory} />
+              {renderContent()}
+            </>
+          )}
+        </main>
+      </div>
+
       {showTour && (
         <OnboardingTour 
           onComplete={() => setShowTour(false)} 
