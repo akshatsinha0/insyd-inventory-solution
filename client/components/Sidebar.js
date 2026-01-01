@@ -15,8 +15,8 @@ export default function Sidebar({ activeTab, setActiveTab, user, onAuthClick, on
   ]
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 flex flex-col rounded-bl-3xl shadow-sm">
-      <div className="p-6 border-b border-gray-200">
+    <aside className="w-64 bg-white border-r border-gray-200 flex flex-col rounded-tl-3xl rounded-bl-3xl shadow-sm">
+      <div className="p-6 border-b border-gray-200 pt-8">
         <h2 className="text-sm font-semibold text-gray-900">Task: Insyd Prototype</h2>
         <h3 className="text-base font-bold text-gray-900 mt-1">Inventory</h3>
         <p className="text-xs text-gray-500 mt-1">AEC Material Management</p>
@@ -60,7 +60,7 @@ export default function Sidebar({ activeTab, setActiveTab, user, onAuthClick, on
         )}
       </div>
       
-      <div className="p-4 border-t border-gray-200 text-xs text-gray-400">
+      <div className="p-4 border-t border-gray-200 text-xs text-gray-400 pb-6">
         v1.0.0
       </div>
     </aside>
