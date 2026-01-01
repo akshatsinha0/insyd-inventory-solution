@@ -93,7 +93,7 @@ export default function Home() {
       {/* Right Side - Header + Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header Bar - Only on right side */}
-        <header className="bg-gray-800 text-white px-6 py-4 flex items-center justify-between rounded-tl-3xl rounded-tr-3xl">
+        <header className="bg-amber-950 text-white px-6 py-4 flex items-center justify-between rounded-tl-3xl rounded-tr-3xl">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-semibold">Insyd Inventory System</h1>
           </div>
