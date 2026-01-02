@@ -95,7 +95,7 @@ export default function Home() {
         {/* Top Header Bar - Only on right side */}
         <header className="bg-amber-950 text-white px-6 py-4 flex items-center justify-between rounded-tl-3xl rounded-tr-3xl">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-semibold">Insyd Inventory System</h1>
+            <h1 className="text-lg font-semibold underline">Insyd Inventory System</h1>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-300">AEC Material Management</span>
